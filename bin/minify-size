@@ -13,7 +13,7 @@ commander.version(pkg.version)
   .option('-j, --json', 'write results in the JSON format')
   .option('-r, --raw-size', 'write sizes in bytes as integers')
   .option('-o, --original-size', 'write the size of the original code')
-  .option('-m, --no-minified-size', 'write the size of the minified code')
+  .option('-m, --no-minified-size', 'prevents writing the size of the minified code')
 
 commander.on('--help', () => {
   console.log('  Examples:')

@@ -40,9 +40,12 @@ Running `minified-size` without any parameters will print usage instructions:
 
   Options:
 
-    -V, --version  output the version number
-    -j, --json     write results in the JSON format
-    -h, --help     output usage information
+    -V, --version           output the version number
+    -j, --json              write results in the JSON format
+    -r, --raw-size          write sizes in bytes as integers
+    -o, --original-size     write the size of the original code
+    -m, --no-minified-size  prevents writing the size of the minified code
+    -h, --help              output usage information
 ```
 
 ## Programmatic usage
