@@ -40,7 +40,6 @@
   "dependencies": {
     "commander": "^2.17.1",
     "pretty-bytes": "^5.1.0",
-    "sprintf-js": "^1.1.1",
     "terser": "^3.8.2"
   },
   "devDependencies": {
