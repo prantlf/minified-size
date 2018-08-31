@@ -11,6 +11,7 @@ commander.version(pkg.version)
   .description(pkg.description)
   .usage('[options] <file>, ...')
   .option('-j, --json', 'write results in the JSON format')
+  .option('-r, --raw-size', 'write sizes in bytes as integers')
 
 commander.on('--help', () => {
   console.log('  Examples:')
@@ -25,6 +26,8 @@ if (!files.length) {
   commander.help()
 }
 
+const { json, rawSize } = commander
+
 function printError (file, { message, line, column }) {
   if (line) {
     console.log(`${file}:${line}:${column}: ${message}`)
@@ -37,12 +40,14 @@ function printResult ({ error, file, minifiedSize }) {
   if (error) {
     printError(file, error)
   } else {
-    console.log(`${file}: ${prettyBytes(minifiedSize)}`)
+    if (!rawSize) {
+      minifiedSize = prettyBytes(minifiedSize)
+    }
+    console.log(`${file}: ${minifiedSize}`)
   }
 }
 
 (async () => {
-  const { json } = commander
   const results = await minifiedSize({ files })
   if (json) {
     console.log(results)
