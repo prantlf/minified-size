@@ -10,7 +10,7 @@ node_js:
   - '8'
 env:
   - COVERALLS_REPO_TOKEN=v8nNPT1jT6ogd6b2F1eAMdxES4QWqHJBW
-+after_success:
+after_success:
   - npm run coverage
   - npm run travis-deploy-once "npm run semantic-release"
 branches:
