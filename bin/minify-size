@@ -12,6 +12,8 @@ commander.version(pkg.version)
   .usage('[options] <file>, ...')
   .option('-j, --json', 'write results in the JSON format')
   .option('-r, --raw-size', 'write sizes in bytes as integers')
+  .option('-o, --original-size', 'write the size of the original code')
+  .option('-m, --no-minified-size', 'write the size of the minified code')
 
 commander.on('--help', () => {
   console.log('  Examples:')
@@ -26,7 +28,11 @@ if (!files.length) {
   commander.help()
 }
 
-const { json, rawSize } = commander
+const {
+  json, rawSize, originalSize, minifiedSize: addMinifiedSize
+} = commander
+
+console.log(addMinifiedSize)
 
 function printError (file, { message, line, column }) {
   if (line) {
@@ -36,14 +42,22 @@ function printError (file, { message, line, column }) {
   }
 }
 
-function printResult ({ error, file, minifiedSize }) {
+function printResult ({ error, file, size, minifiedSize }) {
   if (error) {
     printError(file, error)
   } else {
-    if (!rawSize) {
-      minifiedSize = prettyBytes(minifiedSize)
+    let sizes = []
+    if (originalSize) {
+      sizes.push(size)
     }
-    console.log(`${file}: ${minifiedSize}`)
+    if (addMinifiedSize) {
+      sizes.push(minifiedSize)
+    }
+    if (!rawSize) {
+      sizes = sizes.map(prettyBytes)
+    }
+    sizes = sizes.join(', ')
+    console.log(`${file}: ${sizes}`)
   }
 }
 
