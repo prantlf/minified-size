@@ -50,10 +50,13 @@
     "semantic-release": "^15.9.12"
   },
   "keywords": [
+    "size-calculation",
+    "gziped-files",
     "estimate",
-    "minified",
+    "minify",
+    "gzip",
     "script",
-    "file",
+    "files",
     "size"
   ]
 }
