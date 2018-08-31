@@ -10,10 +10,11 @@ const pkg = require('../package.json')
 commander.version(pkg.version)
   .description(pkg.description)
   .usage('[options] <file>, ...')
-  .option('-j, --json', 'write results in the JSON format')
-  .option('-r, --raw-size', 'write sizes in bytes as integers')
-  .option('-o, --original-size', 'write the size of the original code')
-  .option('-m, --no-minified-size', 'prevents writing the size of the minified code')
+  .option('-j, --json', 'print results in the JSON format')
+  .option('-r, --raw-sizes', 'print sizes in bytes as integers')
+  .option('-o, --no-original-size', 'prevents printing the size of the original code')
+  .option('-m, --no-minified-size', 'prevents printing the size of the minified code')
+  .option('-g, --no-gzipped-size', 'prevents printing the size of the gzipped code')
 
 commander.on('--help', () => {
   console.log('  Examples:')
@@ -29,10 +30,9 @@ if (!files.length) {
 }
 
 const {
-  json, rawSize, originalSize, minifiedSize: addMinifiedSize
+  json, rawSizes, originalSize: printOriginalSize,
+  minifiedSize: printMinifiedSize, gzippedSize: printGzippedSize
 } = commander
-
-console.log(addMinifiedSize)
 
 function printError (file, { message, line, column }) {
   if (line) {
@@ -42,18 +42,21 @@ function printError (file, { message, line, column }) {
   }
 }
 
-function printResult ({ error, file, size, minifiedSize }) {
+function printResult ({ error, file, originalSize, minifiedSize, gzippedSize }) {
   if (error) {
     printError(file, error)
   } else {
     let sizes = []
-    if (originalSize) {
-      sizes.push(size)
+    if (printOriginalSize) {
+      sizes.push(originalSize)
     }
-    if (addMinifiedSize) {
+    if (printMinifiedSize) {
       sizes.push(minifiedSize)
     }
-    if (!rawSize) {
+    if (printGzippedSize) {
+      sizes.push(gzippedSize)
+    }
+    if (!rawSizes) {
       sizes = sizes.map(prettyBytes)
     }
     sizes = sizes.join(', ')
@@ -62,7 +65,7 @@ function printResult ({ error, file, size, minifiedSize }) {
 }
 
 (async () => {
-  const results = await minifiedSize({ files })
+  const results = await minifiedSize({ files, gzip: printGzippedSize })
   if (json) {
     console.log(results)
   } else  {

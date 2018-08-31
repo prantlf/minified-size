@@ -4,15 +4,34 @@ const minifiedSize = require('..')
 const { join } = require('path')
 const test = require('tap')
 
-function checkResults (test, script, results) {
+function checkSuccess (test, script, results, gzip) {
   test.ok(Array.isArray(results))
   test.equal(results.length, 1)
   const result = results[0]
   test.ok(typeof result === 'object')
-  const { file, size, minifiedSize } = result
+  const { file, originalSize, minifiedSize, gzippedSize } = result
   test.equal(file, script)
-  test.ok(typeof size === 'number')
+  test.ok(typeof originalSize === 'number')
   test.ok(typeof minifiedSize === 'number')
+  // eslint-disable-next-line valid-typeof
+  test.ok(typeof gzippedSize === (gzip ? 'number' : 'undefined'))
+  test.end()
+}
+
+function checkError (test, script, results, parsing) {
+  test.ok(Array.isArray(results))
+  test.equal(results.length, 1)
+  const result = results[0]
+  test.ok(typeof result === 'object')
+  const { file, error } = result
+  test.equal(file, script)
+  test.ok(typeof error === 'object')
+  const { message, line, column } = error
+  test.ok(typeof message === 'string')
+  if (parsing) {
+    test.equal(line, 1)
+    test.equal(column, 10)
+  }
   test.end()
 }
 
@@ -34,43 +53,35 @@ test.test('checks input parameters', async test => {
 test.test('supports file input', async test => {
   const script = join(__dirname, '../lib/index.js')
   const results = await minifiedSize({ files: [ script ] })
-  checkResults(test, script, results)
+  checkSuccess(test, script, results, true)
 })
 
 test.test('reports file reading error', async test => {
   const script = join(__dirname, '../lib/missing.js')
   const results = await minifiedSize({ files: [ script ] })
-  test.ok(Array.isArray(results))
-  test.equal(results.length, 1)
-  const result = results[0]
-  test.ok(typeof result === 'object')
-  const { file, error } = result
-  test.equal(file, script)
-  test.ok(typeof error === 'object')
-  const { message } = error
-  test.ok(typeof message === 'string')
-  test.end()
+  checkError(test, script, results, false)
 })
 
 test.test('supports string input', async test => {
   const script = 'function test () { console.log("OK") }'
   const results = await minifiedSize({ sources: [ script ] })
-  checkResults(test, 'source1', results)
+  checkSuccess(test, 'source1', results, true)
 })
 
 test.test('reports source parsing error', async test => {
   const script = 'function () { console.log("OK") }'
   const results = await minifiedSize({ sources: [ script ] })
-  test.ok(Array.isArray(results))
-  test.equal(results.length, 1)
-  const result = results[0]
-  test.ok(typeof result === 'object')
-  const { file, error } = result
-  test.equal(file, 'source1')
-  test.ok(typeof error === 'object')
-  const { message, line, column } = error
-  test.ok(typeof message === 'string')
-  test.equal(line, 1)
-  test.equal(column, 10)
-  test.end()
+  checkError(test, 'source1', results, true)
+})
+
+test.test('allows to disable gzipped size estimation', async test => {
+  const script = 'function test () { console.log("OK") }'
+  const results = await minifiedSize({ sources: [ script ], gzip: false })
+  checkSuccess(test, 'source1', results, false)
+})
+
+test.test('reports invalid gzip options', async test => {
+  const script = 'function test () { console.log("OK") }'
+  const results = await minifiedSize({ sources: [ script ], gzip: { level: Infinity } })
+  checkError(test, 'source1', results, false)
 })

@@ -8,7 +8,7 @@
 
 [![NPM Downloads](https://nodei.co/npm/minified-size.png?downloads=true&stars=true)](https://www.npmjs.com/package/minified-size)
 
-Estimates the size of minified JavaScript files. Check, how much space will a particular script take in the minified output.
+Estimates the size of minified and gzipped JavaScript files. Check, how much space will a particular script take in the minified output.
 
 - [Command-line usage](#command-line-usage)
 - [Programmatic usage](#programmatic-usage)
@@ -28,7 +28,7 @@ Print the expected minified size of a sample file:
 
 ```bash
 $ minified-size lib/index.js
-lib/index.js: 1.06 kB
+lib/index.js: 2.54 kB, 1.48 kB, 643 B
 ```
 
 Running `minified-size` without any parameters will print usage instructions:
@@ -41,10 +41,11 @@ Running `minified-size` without any parameters will print usage instructions:
   Options:
 
     -V, --version           output the version number
-    -j, --json              write results in the JSON format
-    -r, --raw-size          write sizes in bytes as integers
-    -o, --original-size     write the size of the original code
-    -m, --no-minified-size  prevents writing the size of the minified code
+    -j, --json              print results in the JSON format
+    -r, --raw-sizes         print sizes in bytes as integers
+    -o, --no-original-size  prevents printing the size of the original code
+    -m, --no-minified-size  prevents printing the size of the minified code
+    -g, --no-gzipped-size   prevents printing the size of the gzipped code
     -h, --help              output usage information
 ```
 
@@ -62,8 +63,17 @@ Get the expected minified size of a sample file:
 const minifiedSize = require('minified-size')
 const files = [ 'lib/index.js' ]
 const results = await minifiedSize({ files })
-// [ { file: 'lib/index.js', size: 1699, minifiedSize: 1046 } ]
+// [ { file: 'lib/index.js',
+//     originalSize: 2544,
+//     minifiedSize: 1482,
+//     gzippedSize: 643 } ]
 ```
+
+### Options
+
+* `files` - an array of strings with file paths to load and process
+* `sources` - an array of strings with source code to process
+* `gzip` - a boolean to disable estimating the gzipped output size, or an object with [options for gzip].
 
 ## Contributing
 
@@ -80,3 +90,4 @@ Copyright (c) 2018 Ferdinand Prantl
 Licensed under the MIT license.
 
 [NodeJS]: http://nodejs.org/
+[options for gzip]: https://nodejs.org/docs/latest-v8.x/api/zlib.html#zlib_class_options

@@ -1,7 +1,7 @@
 {
   "name": "minified-size",
   "version": "0.0.1",
-  "description": "Estimates the size of minified JavaScript files.",
+  "description": "Estimates the size of minified and gzipped JavaScript files.",
   "author": {
     "name": "Ferdinand Prantl",
     "email": "prantlf@gmail.com",
@@ -30,7 +30,7 @@
     "minified-size": "./bin/minified-size"
   },
   "scripts": {
-    "lint": "standard bin/minified-size lib/*.js test/*.js",
+    "lint": "standard --verbose bin/minified-size lib/*.js test/*.js",
     "check": "tap test/*.js --100",
     "test": "npm run lint && npm run check",
     "coverage": "test `node --version | cut -c 2` -eq 8 && npm run check -- --cov --coverage-report=lcov --no-browser"
