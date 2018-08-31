@@ -1,0 +1,52 @@
+#!/usr/bin/env node
+
+'use strict'
+
+const commander = require('commander')
+const minifiedSize = require('..')
+const prettyBytes = require('pretty-bytes')
+const pkg = require('../package.json')
+
+commander.version(pkg.version)
+  .description(pkg.description)
+  .usage('[options] <file>, ...')
+  .option('-j, --json', 'write results in the JSON format')
+
+commander.on('--help', () => {
+  console.log('  Examples:')
+  console.log()
+  console.log('    $ minified-size lib/index.js')
+  console.log('    $ minified-size --json lib/index.js')
+})
+
+commander.parse(process.argv)
+const files = commander.args
+if (!files.length) {
+  commander.help()
+}
+
+function printError (file, { message, line, column }) {
+  if (line) {
+    console.log(`${file}:${line}:${column}: ${message}`)
+  } else {
+    console.log(`${file}: ${message}`)
+  }
+}
+
+function printResult ({ error, file, minifiedSize }) {
+  if (error) {
+    printError(file, error)
+  } else {
+    console.log(`${file}: ${prettyBytes(minifiedSize)}`)
+  }
+}
+
+(async () => {
+  const { json } = commander
+  const results = await minifiedSize({ files })
+  if (json) {
+    console.log(results)
+  } else  {
+    results.forEach(printResult)
+  }
+})()
