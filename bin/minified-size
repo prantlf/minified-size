@@ -9,7 +9,7 @@ const pkg = require('../package.json')
 
 commander.version(pkg.version)
   .description(pkg.description)
-  .usage('[options] <file>, ...')
+  .usage('[options] <file>, ... | --')
   .option('-j, --json', 'print results in the JSON format')
   .option('-r, --raw-sizes', 'print sizes in bytes as integers')
   .option('-o, --no-original-size', 'prevents printing the size of the original code')
@@ -18,17 +18,25 @@ commander.version(pkg.version)
 
 commander.on('--help', () => {
   console.log('  All three sizes are estimated by default. File paths may contain wildcards.')
+  console.log('  If "--" is entered instead of files, the standard input will be read.')
   console.log()
   console.log('  Examples:')
   console.log()
   console.log('    $ minified-size lib/index.js')
   console.log('    $ minified-size --json lib/*.js')
+  console.log('    $ cat lib/index.js | minified-size --')
 })
 
-commander.parse(process.argv)
+const args = process.argv
+commander.parse(args)
 const files = commander.args
+let streams
 if (!files.length) {
-  commander.help()
+  if (args[args.length - 1] === '--') {
+    streams = [ process.stdin ]
+  } else {
+    commander.help()
+  }
 }
 
 const {
@@ -67,10 +75,10 @@ function printResult ({ error, file, originalSize, minifiedSize, gzippedSize }) 
 }
 
 (async () => {
-  const results = await minifiedSize({ files, gzip: printGzippedSize })
+  const results = await minifiedSize({ files, streams, gzip: printGzippedSize })
   if (json) {
     console.log(results)
-  } else  {
+  } else {
     results.forEach(printResult)
   }
 })()

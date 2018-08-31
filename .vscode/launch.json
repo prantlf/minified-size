@@ -5,13 +5,19 @@
       "type": "node",
       "request": "launch",
       "name": "bin",
-      "program": "${workspaceRoot}/bin/minified-size"
+      "program": "${workspaceRoot}/bin/minified-size",
+      "args": [
+        "--"
+      ]
     },
     {
       "type": "node",
       "request": "launch",
       "name": "test",
-      "program": "${workspaceRoot}/test/test"
+      "program": "${workspaceRoot}/test/test",
+      "skipFiles": [
+        "<node_internals>/**/*.js"
+      ]
     }
   ]
 }

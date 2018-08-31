@@ -1,6 +1,7 @@
 'use strict'
 
 const minifiedSize = require('..')
+const { Readable } = require('stream')
 const { join } = require('path')
 const test = require('tap')
 
@@ -33,6 +34,19 @@ function checkError (test, script, results, parsing) {
     test.equal(column, 10)
   }
   test.end()
+}
+
+function createStream (content) {
+  return new Readable({
+    read () {
+      if (!content) {
+        this.emit('error', new Error('Nothing to read.'))
+      } else {
+        this.push(content)
+        this.push(null)
+      }
+    }
+  })
 }
 
 test.test('checks input parameters', async test => {
@@ -104,4 +118,20 @@ test.test('reports invalid gzip options', async test => {
   const script = 'function test () { console.log("OK") }'
   const results = await minifiedSize({ sources: [ script ], gzip: { level: Infinity } })
   checkError(test, 'source1', results, false)
+})
+
+test.test('supports stream input', async test => {
+  const stream = createStream('function test () { console.log("OK") }')
+  const results = await minifiedSize({ streams: [ stream ] })
+  checkSuccess(test, 'stream1', results, true)
+})
+
+test.test('reports stream reading error', async test => {
+  try {
+    const stream = createStream()
+    const results = await minifiedSize({ streams: [ stream ] })
+    checkError(test, 'stream1', results, false)
+  } catch (error) {
+    console.log('*** test', error)
+  }
 })
