@@ -36,7 +36,7 @@ Running `minified-size` without any parameters will print usage instructions:
 ```text
   Usage: minify-size [options] <file>, ...
 
-  Estimates the size of minified JavaScript files.
+  Estimates the size of minified and gzipped JavaScript files.
 
   Options:
 
@@ -47,6 +47,8 @@ Running `minified-size` without any parameters will print usage instructions:
     -m, --no-minified-size  prevents printing the size of the minified code
     -g, --no-gzipped-size   prevents printing the size of the gzipped code
     -h, --help              output usage information
+
+  All three sizes are estimated by default. File paths may contain wildcards.
 ```
 
 ## Programmatic usage

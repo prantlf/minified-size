@@ -17,10 +17,12 @@ commander.version(pkg.version)
   .option('-g, --no-gzipped-size', 'prevents printing the size of the gzipped code')
 
 commander.on('--help', () => {
+  console.log('  All three sizes are estimated by default. File paths may contain wildcards.')
+  console.log()
   console.log('  Examples:')
   console.log()
   console.log('    $ minified-size lib/index.js')
-  console.log('    $ minified-size --json lib/index.js')
+  console.log('    $ minified-size --json lib/*.js')
 })
 
 commander.parse(process.argv)

@@ -51,13 +51,33 @@ test.test('checks input parameters', async test => {
 })
 
 test.test('supports file input', async test => {
-  const script = join(__dirname, '../lib/index.js')
+  const script = 'lib/index.js'
   const results = await minifiedSize({ files: [ script ] })
   checkSuccess(test, script, results, true)
 })
 
+test.test('supports file input with a relative path and wildcards', async test => {
+  const scripts = 'lib/*.js'
+  const script = 'lib/index.js'
+  const results = await minifiedSize({ files: [ scripts ] })
+  checkSuccess(test, script, results, true)
+})
+
+test.test('supports file input with an absolute path and wildcards', async test => {
+  const scripts = join(__dirname, '../lib/*.js')
+  const script = join(__dirname, '../lib/index.js')
+  const results = await minifiedSize({ files: [ scripts ] })
+  checkSuccess(test, script, results, true)
+})
+
+test.test('reports directory listing error', async test => {
+  const script = 'missing/*.js'
+  const results = await minifiedSize({ files: [ script ] })
+  checkError(test, script, results, false)
+})
+
 test.test('reports file reading error', async test => {
-  const script = join(__dirname, '../lib/missing.js')
+  const script = 'lib/missing.js'
   const results = await minifiedSize({ files: [ script ] })
   checkError(test, script, results, false)
 })
