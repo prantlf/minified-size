@@ -31,9 +31,9 @@
   },
   "scripts": {
     "lint": "standard bin/minified-size lib/*.js test/*.js",
-    "check": "tap test/*.js",
+    "check": "tap test/*.js --100",
     "test": "npm run lint && npm run check",
-    "coverage": "npm run check -- --cov --coverage-report=lcov --no-browser"
+    "coverage": "test `node --version | cut -c 2` -eq 8 && npm run check -- --cov --coverage-report=lcov --no-browser"
   },
   "dependencies": {
     "commander": "^2.17.1",
