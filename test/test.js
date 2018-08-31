@@ -2,7 +2,7 @@
 
 const minifiedSize = require('..')
 const { Readable } = require('stream')
-const { join } = require('path')
+const { join, normalize } = require('path')
 const test = require('tap')
 
 function checkSuccess (test, script, results, gzip) {
@@ -10,7 +10,9 @@ function checkSuccess (test, script, results, gzip) {
   test.equal(results.length, 1)
   const result = results[0]
   test.ok(typeof result === 'object')
-  const { file, originalSize, minifiedSize, gzippedSize } = result
+  let { file, originalSize, minifiedSize, gzippedSize } = result
+  file = normalize(file)
+  script = normalize(script)
   test.equal(file, script)
   test.ok(typeof originalSize === 'number')
   test.ok(typeof minifiedSize === 'number')
@@ -24,7 +26,9 @@ function checkError (test, script, results, parsing) {
   test.equal(results.length, 1)
   const result = results[0]
   test.ok(typeof result === 'object')
-  const { file, error } = result
+  let { file, error } = result
+  file = normalize(file)
+  script = normalize(script)
   test.equal(file, script)
   test.ok(typeof error === 'object')
   const { message, line, column } = error
@@ -127,11 +131,7 @@ test.test('supports stream input', async test => {
 })
 
 test.test('reports stream reading error', async test => {
-  try {
-    const stream = createStream()
-    const results = await minifiedSize({ streams: [ stream ] })
-    checkError(test, 'stream1', results, false)
-  } catch (error) {
-    console.log('*** test', error)
-  }
+  const stream = createStream()
+  const results = await minifiedSize({ streams: [ stream ] })
+  checkError(test, 'stream1', results, false)
 })

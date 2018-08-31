@@ -25,7 +25,7 @@ Make sure that you have [NodeJS] >= 8 installed. Install the `minified-size` pac
 $ npm install -g minified-size
 ```
 
-Print the expected minified size of a sample file:
+Print the original, expected minified and gzipped sizes of a sample file:
 
 ```bash
 $ minified-size lib/index.js
@@ -61,7 +61,7 @@ Make sure that you use [NodeJS] >= 8. Install the `minified-size` package locall
 npm install --save minified-size
 ```
 
-Get the expected minified size of a sample file:
+Get the original, expected minified and gzipped sizes (in bytes) of a sample file:
 
 ```javascript
 const minifiedSize = require('minified-size')
