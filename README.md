@@ -83,6 +83,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+* 2018-08-31   v0.1.0   Support wildcards in the input file paths
 * 2018-08-31   v0.0.1   Initial release
 
 ## License
