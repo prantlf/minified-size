@@ -39,9 +39,9 @@
   },
   "dependencies": {
     "commander": "^2.17.1",
+    "fast-glob": "^2.2.2",
     "pretty-bytes": "^5.1.0",
-    "terser": "^3.8.2",
-    "tiny-glob": "^0.2.2"
+    "terser": "^3.8.2"
   },
   "devDependencies": {
     "coveralls": "^3.0.2",
