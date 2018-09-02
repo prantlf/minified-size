@@ -11,13 +11,13 @@
 
 Estimates the size of minified and gzipped JavaScript files. Check, how much space will a particular script take in the minified output.
 
-- [Command-line usage](#command-line-usage)
-- [Programmatic usage](#programmatic-usage)
-- [Contributing](#programmatic-usage)
+- [Command-line Usage](#command-line-usage)
+- [Programmatic Usage](#programmatic-usage)
+- [Contributing](#contributing)
 - [Release History](#release-history)
 - [License](#license)
 
-## Command-line usage
+## Command-line Usage
 
 Make sure that you have [NodeJS] >= 8 installed. Install the `minified-size` package globally:
 
@@ -37,8 +37,6 @@ Running `minified-size` without any parameters will print usage instructions:
 ```text
   Usage: minified-size [options] <file>, ... | --
 
-  Estimates the size of minified and gzipped JavaScript files.
-
   Options:
 
     -V, --version           output the version number
@@ -53,7 +51,7 @@ Running `minified-size` without any parameters will print usage instructions:
   If "--" is entered instead of files, the standard input will be read.
 ```
 
-## Programmatic usage
+## Programmatic Usage
 
 Make sure that you use [NodeJS] >= 8. Install the `minified-size` package locally:
 
