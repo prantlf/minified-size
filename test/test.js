@@ -31,9 +31,11 @@ function checkError (test, script, results, parsing) {
   script = normalize(script)
   test.equal(file, script)
   test.ok(typeof error === 'object')
-  const { message, line, column } = error
+  const { message, reason, line, column } = error
   test.ok(typeof message === 'string')
   if (parsing) {
+    test.ok(typeof reason === 'string')
+    test.ok(reason.length < message.length)
     test.equal(line, 1)
     test.equal(column, 10)
   }

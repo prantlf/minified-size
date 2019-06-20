@@ -19,15 +19,15 @@ Estimates the size of minified and gzipped JavaScript files. Check, how much spa
 
 ## Command-line Usage
 
-Make sure that you have [NodeJS] >= 8 installed. Install the `minified-size` package globally:
+Make sure that you have [Node.js] >= 8 installed. Install the `minified-size` package globally:
 
-```bash
+```text
 $ npm install -g minified-size
 ```
 
 Print the original, expected minified and gzipped sizes of a sample file:
 
-```bash
+```text
 $ minified-size lib/index.js
 lib/index.js: 2.54 kB, 1.48 kB, 643 B
 ```
@@ -51,9 +51,24 @@ Running `minified-size` without any parameters will print usage instructions:
   If "--" is entered instead of files, the standard input will be read.
 ```
 
+### Errors
+
+If parsing of the JavaScript input or its minification fails, a colourful error message with additional information will be printed instead of the computed sizes. For example, a typo "exort" instead of "ex**p**ort":
+
+```text
+$ minified-size test/invalid.js
+test/module.txt(1,7): unknown: Unexpected token, expected ";"
+
+> 1 | exort default {
+    |       ^
+  2 |   "compressed": "
+  3 | "
+  4 | }` } ]
+```
+
 ## Programmatic Usage
 
-Make sure that you use [NodeJS] >= 8. Install the `minified-size` package locally:
+Make sure that you use [Node.js] >= 8. Install the `minified-size` package locally:
 
 ```bash
 npm install --save minified-size
@@ -78,12 +93,35 @@ const results = await minifiedSize({ files })
 * `sources` - an array of strings with source code to process
 * `gzip` - a boolean to disable estimating the gzipped output size, or an object with [options for gzip].
 
+### Errors
+
+If parsing of the JavaScript input or its minification fails, the returned object will contain an `error` key instead of the computed sizes:
+
+```javascript
+const minifiedSize = require('minified-size')
+const files = [ 'test/invalid.js' ]
+const results = await minifiedSize({ files })
+// [ { file: 'test/invalid.js',
+//     error: {
+//       reason: 'unknown: Unexpected token, expected ";"',
+//       line: 1,
+//       column: 7,
+//       message: `test/module.txt(1,7): unknown: Unexpected token, expected ";"
+//
+// > 1 | exort default {
+//     |       ^
+//   2 |   "compressed": "
+//   3 | "
+//   4 | }` } ]
+```
+
 ## Contributing
 
 In lieu of a formal styleguide, take care to maintain the existing coding style.  Add unit tests for any new or changed functionality. Lint and test your code using Grunt.
 
 ## Release History
 
+* 2019-06-20   v1.0.0   Support full Unicode and print better error messages
 * 2018-08-31   v0.2.2   Support Windows paths
 * 2018-08-31   v0.2.0   Support source code read from standard input
 * 2018-08-31   v0.1.0   Support wildcards in the input file paths
@@ -95,5 +133,5 @@ Copyright (c) 2018-2019 Ferdinand Prantl
 
 Licensed under the MIT license.
 
-[NodeJS]: http://nodejs.org/
+[Node.js]: http://nodejs.org/
 [options for gzip]: https://nodejs.org/docs/latest-v8.x/api/zlib.html#zlib_class_options
