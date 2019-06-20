@@ -5,7 +5,7 @@ const { Readable } = require('stream')
 const { join, normalize } = require('path')
 const test = require('tap')
 
-function checkSuccess (test, script, results, gzip) {
+function checkSuccess (test, script, results, gzip, end) {
   test.ok(Array.isArray(results))
   test.equal(results.length, 1)
   const result = results[0]
@@ -18,10 +18,12 @@ function checkSuccess (test, script, results, gzip) {
   test.ok(typeof minifiedSize === 'number')
   // eslint-disable-next-line valid-typeof
   test.ok(typeof gzippedSize === (gzip ? 'number' : 'undefined'))
-  test.end()
+  if (end !== false) {
+    test.end()
+  }
 }
 
-function checkError (test, script, results, parsing) {
+function checkError (test, script, results, parsing, end) {
   test.ok(Array.isArray(results))
   test.equal(results.length, 1)
   const result = results[0]
@@ -39,7 +41,9 @@ function checkError (test, script, results, parsing) {
     test.equal(line, 1)
     test.equal(column, 10)
   }
-  test.end()
+  if (end !== false) {
+    test.end()
+  }
 }
 
 function createStream (content) {
@@ -138,8 +142,16 @@ test.test('reports stream reading error', async test => {
   checkError(test, 'stream1', results, false)
 })
 
-test.test('minifier recognizes Unicode line breaks', async test => {
+test.test('minifier recognizes Unicode line breaks as whitespace', async test => {
   const script = 'test/module.txt'
   const results = await minifiedSize({ files: [ script ] })
   checkSuccess(test, script, results, true)
+})
+
+test.test('minifier does not escape Unicode characters', async test => {
+  const script = 'message = "䅬朤堾..."'
+  const results = await minifiedSize({ sources: [ script ] })
+  checkSuccess(test, 'source1', results, true, false)
+  const { originalSize, minifiedSize: smallerSize } = results[0]
+  test.ok(originalSize > smallerSize)
 })

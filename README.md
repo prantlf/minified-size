@@ -115,6 +115,31 @@ const results = await minifiedSize({ files })
 //   4 | }` } ]
 ```
 
+## Unicode
+
+Let us say, that you minify scripts using UTF-8 literals a lot:
+
+```js
+message = "䅬朤堾..."
+```
+
+If you run such input through 'babel-minify`, for example, you may become a bigger output instead of a smaller one, because it escapes non-latin characters:
+
+```js
+message="\u416C\u6724\u583E\u605B\u0825\u6120\u4C20..."
+```
+
+Look for an option, that will make your minifier retain the Unicode literals unchanged, or converts all escaped Unicode code points to literals. You could also post-process the minified output yourself by the following method:
+
+```js
+function replaceEscapedUnicodeCharacters (source) {
+  return source.replace(/\\u([\w]{4})/gi, (match, code) =>
+    String.fromCharCode(parseInt(code, 16)))
+}
+```
+
+The size computation done by `minified-size` uses the function above to ensure correct results until the issue [babel-minify/619] is resolved.
+
 ## Contributing
 
 In lieu of a formal styleguide, take care to maintain the existing coding style.  Add unit tests for any new or changed functionality. Lint and test your code using Grunt.
@@ -135,3 +160,4 @@ Licensed under the MIT license.
 
 [Node.js]: http://nodejs.org/
 [options for gzip]: https://nodejs.org/docs/latest-v8.x/api/zlib.html#zlib_class_options
+[babel-minify/619]: https://github.com/babel/minify/issues/619
