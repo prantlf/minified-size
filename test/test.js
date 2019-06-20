@@ -135,3 +135,9 @@ test.test('reports stream reading error', async test => {
   const results = await minifiedSize({ streams: [ stream ] })
   checkError(test, 'stream1', results, false)
 })
+
+test.test('minifier recognizes Unicode line breaks', async test => {
+  const script = 'test/module.txt'
+  const results = await minifiedSize({ files: [ script ] })
+  checkSuccess(test, script, results, true)
+})
