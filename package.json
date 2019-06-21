@@ -23,7 +23,7 @@
     "url": "https://github.com/prantlf/minified-size/issues"
   },
   "engines": {
-    "node": ">=8"
+    "node": ">=10"
   },
   "main": "lib/index.js",
   "bin": {

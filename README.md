@@ -17,12 +17,14 @@ Estimates the size of minified and gzipped JavaScript, CSS and HTML files. Check
 - [Release History](#release-history)
 - [License](#license)
 
+**Note:** If you use Node.js 8 or 9, install a version `1.x`. Versions `2.x` require Node.js 10 or newer. (They need support for asynchronous generators.)
+
 ## Command-line Usage
 
-Make sure that you have [Node.js] >= 8 installed. Install the `minified-size` package globally:
+Make sure that you have [Node.js] >= 10 installed. Install the `minified-size` package globally:
 
 ```text
-$ npm install -g minified-size
+$ npm install --global minified-size
 ```
 
 Print the original, expected minified and gzipped sizes of a sample file:
@@ -72,7 +74,7 @@ test/module.txt(1,7): unknown: Unexpected token, expected ";"
 
 ## Programmatic Usage
 
-Make sure that you use [Node.js] >= 8. Install the `minified-size` package locally:
+Make sure that you use [Node.js] >= 10. Install the `minified-size` package locally:
 
 ```bash
 npm install --save minified-size
@@ -81,17 +83,38 @@ npm install --save minified-size
 Get the original, expected minified and gzipped sizes (in bytes) of a sample file:
 
 ```javascript
-const minifiedSize = require('minified-size')
-const files = [ 'lib/index.js' ]
-const results = await minifiedSize({ files })
+const { getMinifiedSizes } = require('minified-size')
+const results = await minifiedSize({ files: [ 'lib/index.js' ] })
 // [ { file: 'lib/index.js',
 //     originalSize: 2544,
 //     minifiedSize: 1482,
 //     gzippedSize: 643 } ]
 ```
 
+If you process a lot of files, you can use an asynchronous generator, which yields results one-by-one to get them earlier, instead of returning an array with all of them together:
+
+```javascript
+const { generateMinifiedSizes } = require('minified-size')
+const resultGenerator = generateMinifiedSizes({
+  files: [ 'public/**/*.(js|css|html)' ]
+})
+for (;;) {
+  const result = await resultGenerator.next()
+  if (result.done) {
+    break
+  }
+  const { error, file, originalSize, minifiedSize, gzippedSize } = result.value
+  if (error) {
+    console.info(`${file}: ${originalSize}, ${minifiedSize}, ${gzippedSize}`)
+  } else {
+    console.error(`${file}: ${error}`)
+  }
+}
+```
+
 ### Options
 
+* `language` - a string specifying the input language ("js", "css" or "html")
 * `files` - an array of strings with file paths to load and process
 * `streams` - an array of readable streams with source code to process
 * `sources` - an array of strings with source code to process
@@ -150,6 +173,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+* 2019-06-21   v2.0.0   Print results for each file early; do not wait, until all are processed
 * 2019-06-21   v1.2.0   Support stylesheets (CSS) and web pages (HTML)
 * 2019-06-20   v1.0.0   Support full Unicode and prints better error messages
 * 2018-08-31   v0.2.2   Support Windows paths

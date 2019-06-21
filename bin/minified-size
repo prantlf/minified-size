@@ -3,7 +3,7 @@
 'use strict'
 
 const commander = require('commander')
-const minifiedSize = require('..')
+const { getMinifiedSizes, generateMinifiedSizes } = require('..')
 const prettyBytes = require('pretty-bytes')
 const chalk = require('chalk')
 const pkg = require('../package.json')
@@ -99,10 +99,21 @@ function printResult ({ error, file, originalSize, minifiedSize, gzippedSize }) 
 }
 
 (async () => {
-  const results = await minifiedSize({ language, files, streams, gzip: printGzippedSize })
   if (json) {
+    const results = await getMinifiedSizes({
+      language, files, streams, gzip: printGzippedSize
+    })
     console.log(results)
   } else {
-    results.forEach(printResult)
+    const generator = generateMinifiedSizes({
+      language, files, streams, gzip: printGzippedSize
+    })
+    for (;;) {
+      const result = await generator.next()
+      if (result.done) {
+        break
+      }
+      printResult(result.value)
+    }
   }
 })()

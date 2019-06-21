@@ -1,6 +1,8 @@
 'use strict'
 
 const minifiedSize = require('..')
+const getMinifiedSizes = minifiedSize.getMinifiedSizes
+const generateMinifiedSizes = minifiedSize.generateMinifiedSizes
 const { Readable } = require('stream')
 const { join, normalize } = require('path')
 const test = require('tap')
@@ -62,6 +64,13 @@ function createStream (content) {
     }
   })
 }
+
+test.test('exports normal functions and a generator', test => {
+  test.ok(typeof minifiedSize === 'function')
+  test.ok(typeof getMinifiedSizes === 'function')
+  test.ok(typeof generateMinifiedSizes === 'function')
+  test.end()
+})
 
 test.test('checks input parameters', async test => {
   try {
@@ -200,4 +209,16 @@ test.test('reports web page parsing error', async test => {
   const page = '<html lang="en"'
   const results = await minifiedSize({ language: 'html', sources: [ page ] })
   checkError(test, 'source1', results, false)
+})
+
+test.test('works as a generator too', async test => {
+  const generator = generateMinifiedSizes({ files: [ 'test/*' ] })
+  for (;;) {
+    const result = await generator.next()
+    if (result.done) {
+      break
+    }
+    checkSuccess(test, result.value.file, [ result.value ], true, false)
+  }
+  test.end()
 })
