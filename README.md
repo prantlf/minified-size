@@ -9,7 +9,7 @@
 
 [![NPM Downloads](https://nodei.co/npm/minified-size.png?downloads=true&stars=true)](https://www.npmjs.com/package/minified-size)
 
-Estimates the size of minified and gzipped JavaScript or Stylesheet files. Check, how much space will a particular script take in the minified output.
+Estimates the size of minified and gzipped JavaScript, CSS and HTML files. Check, how much space will a particular source take in the minified output.
 
 - [Command-line Usage](#command-line-usage)
 - [Programmatic Usage](#programmatic-usage)
@@ -51,7 +51,8 @@ Running `minified-size` without any parameters will print usage instructions:
   All three sizes are estimated by default. File paths may contain wildcards.
   If "--" is entered instead of files, the standard input will be read.
   Stylesheets are recognized by the extension ".css", or they can be forced
-  by the language "css" in the command line.
+  by the language "css" on the command line. Web pages are recognized by the
+  extension ".htm[l]", or they can be forced by the language "html".
 ```
 
 ### Errors
@@ -149,8 +150,8 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
-* 2019-06-21   v1.2.0   Support stylesheets
-* 2019-06-20   v1.0.0   Support full Unicode and print better error messages
+* 2019-06-21   v1.2.0   Support stylesheets (CSS) and web pages (HTML)
+* 2019-06-20   v1.0.0   Support full Unicode and prints better error messages
 * 2018-08-31   v0.2.2   Support Windows paths
 * 2018-08-31   v0.2.0   Support source code read from standard input
 * 2018-08-31   v0.1.0   Support wildcards in the input file paths

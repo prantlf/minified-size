@@ -23,13 +23,14 @@ commander.on('--help', () => {
   console.log('  All three sizes are estimated by default. File paths may contain wildcards.')
   console.log('  If "--" is entered instead of files, the standard input will be read.')
   console.log('  Stylesheets are recognized by the extension ".css", or they can be forced')
-  console.log('  by the language "css" in the command line.')
+  console.log('  by the language "css" on the command line. Web pages are recognized by the')
+  console.log('  extension ".htm[l]", or they can be forced by the language "html".')
   console.log()
   console.log('  Examples:')
   console.log()
   console.log('    $ minified-size lib/index.js')
   console.log('    $ minified-size --json assets/*.css')
-  console.log('    $ cat lib/index.js | minified-size --')
+  console.log('    $ cat public/index.html | minified-size --language=html --')
 })
 
 const args = process.argv

@@ -177,3 +177,27 @@ test.test('reports stylesheet parsing error', async test => {
   const results = await minifiedSize({ language: 'css', sources: [ script ] })
   checkError(test, 'source1', results, true)
 })
+
+test.test('reports minification error if an empty output is returned', async test => {
+  const script = '.button { padding: }'
+  const results = await minifiedSize({ language: 'css', sources: [ script ] })
+  checkError(test, 'source1', results, false)
+})
+
+test.test('recognizes a web page by its file extension', async test => {
+  const page = 'test/page.html'
+  const results = await minifiedSize({ files: [ page ] })
+  checkSuccess(test, page, results, true)
+})
+
+test.test('forces the web-page-mode by a parameter', async test => {
+  const page = '<html lang="en"></html>'
+  const results = await minifiedSize({ language: 'html', sources: [ page ] })
+  checkSuccess(test, 'source1', results, true)
+})
+
+test.test('reports web page parsing error', async test => {
+  const page = '<html lang="en"'
+  const results = await minifiedSize({ language: 'html', sources: [ page ] })
+  checkError(test, 'source1', results, false)
+})

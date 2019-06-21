@@ -1,7 +1,7 @@
 {
   "name": "minified-size",
   "version": "0.0.0-development",
-  "description": "Estimates the size of minified and gzipped JavaScript or CSS files.",
+  "description": "Estimates the size of minified and gzipped JavaScript, CSS and HTML files.",
   "author": {
     "name": "Ferdinand Prantl",
     "email": "prantlf@gmail.com",
@@ -41,6 +41,7 @@
     "commander": "2.20.0",
     "crass": "0.12.3",
     "fast-glob": "3.0.1",
+    "html-minifier": "4.0.0",
     "pretty-bytes": "5.2.0",
     "terser": "4.0.0"
   },
@@ -66,6 +67,7 @@
     "js",
     "stylesheet",
     "css",
+    "html",
     "files",
     "size"
   ]
