@@ -9,7 +9,7 @@
 
 [![NPM Downloads](https://nodei.co/npm/minified-size.png?downloads=true&stars=true)](https://www.npmjs.com/package/minified-size)
 
-Estimates the size of minified and gzipped JavaScript files. Check, how much space will a particular script take in the minified output.
+Estimates the size of minified and gzipped JavaScript or Stylesheet files. Check, how much space will a particular script take in the minified output.
 
 - [Command-line Usage](#command-line-usage)
 - [Programmatic Usage](#programmatic-usage)
@@ -40,6 +40,7 @@ Running `minified-size` without any parameters will print usage instructions:
   Options:
 
     -V, --version           output the version number
+    -l, --language [name]   specifies the input language (default: "js")
     -j, --json              print results in the JSON format
     -r, --raw-sizes         print sizes in bytes as integers
     -o, --no-original-size  prevents printing the size of the original code
@@ -49,11 +50,13 @@ Running `minified-size` without any parameters will print usage instructions:
 
   All three sizes are estimated by default. File paths may contain wildcards.
   If "--" is entered instead of files, the standard input will be read.
+  Stylesheets are recognized by the extension ".css", or they can be forced
+  by the language "css" in the command line.
 ```
 
 ### Errors
 
-If parsing of the JavaScript input or its minification fails, a colourful error message with additional information will be printed instead of the computed sizes. For example, a typo "exort" instead of "ex**p**ort":
+If parsing of the input or its minification fails, a colourful error message with additional information will be printed instead of the computed sizes. For example, a typo "exort" instead of "ex**p**ort":
 
 ```text
 $ minified-size test/invalid.js
@@ -95,7 +98,7 @@ const results = await minifiedSize({ files })
 
 ### Errors
 
-If parsing of the JavaScript input or its minification fails, the returned object will contain an `error` key instead of the computed sizes:
+If parsing of the input or its minification fails, the returned object will contain an `error` key instead of the computed sizes:
 
 ```javascript
 const minifiedSize = require('minified-size')
@@ -123,7 +126,7 @@ Let us say, that you minify scripts using UTF-8 literals a lot:
 message = "䅬朤堾..."
 ```
 
-If you run such input through 'babel-minify`, for example, you may become a bigger output instead of a smaller one, because it escapes non-latin characters:
+If you run such input through 'babel-minify`, for example, you may become a lot bigger output instead of a smaller one, because it escapes non-latin characters:
 
 ```js
 message="\u416C\u6724\u583E\u605B\u0825\u6120\u4C20..."
@@ -146,6 +149,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+* 2019-06-21   v1.2.0   Support stylesheets
 * 2019-06-20   v1.0.0   Support full Unicode and print better error messages
 * 2018-08-31   v0.2.2   Support Windows paths
 * 2018-08-31   v0.2.0   Support source code read from standard input

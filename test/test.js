@@ -39,7 +39,11 @@ function checkError (test, script, results, parsing, end) {
     test.ok(typeof reason === 'string')
     test.ok(reason.length < message.length)
     test.equal(line, 1)
-    test.equal(column, 10)
+    if (column) {
+      test.equal(column, 10)
+    } else {
+      test.equal(column, undefined)
+    }
   }
   if (end !== false) {
     test.end()
@@ -154,4 +158,22 @@ test.test('minifier does not escape Unicode characters', async test => {
   checkSuccess(test, 'source1', results, true, false)
   const { originalSize, minifiedSize: smallerSize } = results[0]
   test.ok(originalSize > smallerSize)
+})
+
+test.test('recognizes a stylesheet by its file extension', async test => {
+  const stylesheet = 'test/stylesheet.css'
+  const results = await minifiedSize({ files: [ stylesheet ] })
+  checkSuccess(test, stylesheet, results, true)
+})
+
+test.test('forces the stylesheet-mode by a parameter', async test => {
+  const stylesheet = '.button { padding: 1em }'
+  const results = await minifiedSize({ language: 'css', sources: [ stylesheet ] })
+  checkSuccess(test, 'source1', results, true)
+})
+
+test.test('reports stylesheet parsing error', async test => {
+  const script = '.button padding: 1em'
+  const results = await minifiedSize({ language: 'css', sources: [ script ] })
+  checkError(test, 'source1', results, true)
 })

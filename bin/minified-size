@@ -11,6 +11,7 @@ const pkg = require('../package.json')
 commander.version(pkg.version)
   .description(pkg.description)
   .usage('[options] <file>, ... | --')
+  .option('-l, --language [name]', 'specifies the input language', 'js')
   .option('-j, --json', 'print results in the JSON format')
   .option('-r, --raw-sizes', 'print sizes in bytes as integers')
   .option('-o, --no-original-size', 'prevents printing the size of the original code')
@@ -18,13 +19,16 @@ commander.version(pkg.version)
   .option('-g, --no-gzipped-size', 'prevents printing the size of the gzipped code')
 
 commander.on('--help', () => {
+  console.log()
   console.log('  All three sizes are estimated by default. File paths may contain wildcards.')
   console.log('  If "--" is entered instead of files, the standard input will be read.')
+  console.log('  Stylesheets are recognized by the extension ".css", or they can be forced')
+  console.log('  by the language "css" in the command line.')
   console.log()
   console.log('  Examples:')
   console.log()
   console.log('    $ minified-size lib/index.js')
-  console.log('    $ minified-size --json lib/*.js')
+  console.log('    $ minified-size --json assets/*.css')
   console.log('    $ cat lib/index.js | minified-size --')
 })
 
@@ -41,14 +45,31 @@ if (!files.length) {
 }
 
 const {
-  json, rawSizes, originalSize: printOriginalSize,
+  language, json, rawSizes, originalSize: printOriginalSize,
   minifiedSize: printMinifiedSize, gzippedSize: printGzippedSize
 } = commander
 
 function printError (file, { message, line, column }) {
   let prefix = file
+  // Use the error location returned by babel-minify and crass (only line).
   if (line) {
-    prefix += `(${line},${column})`
+    prefix += `(${line}`
+    if (column) {
+      prefix += `,${column}`
+    }
+    prefix += ')'
+  }
+  // Colourise Jison-formatted error message from crass.
+  if (line && !column) {
+    message = message
+      .split('\n')
+      .map((line, index) => {
+        if (index > 1) {
+          line = chalk.red(line)
+        }
+        return line
+      })
+      .join('\n')
   }
   prefix = chalk.magenta(`${prefix}:`)
   console.log(`${prefix} ${message}`)
@@ -77,7 +98,7 @@ function printResult ({ error, file, originalSize, minifiedSize, gzippedSize }) 
 }
 
 (async () => {
-  const results = await minifiedSize({ files, streams, gzip: printGzippedSize })
+  const results = await minifiedSize({ language, files, streams, gzip: printGzippedSize })
   if (json) {
     console.log(results)
   } else {
