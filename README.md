@@ -84,7 +84,7 @@ Get the original, expected minified and gzipped sizes (in bytes) of a sample fil
 
 ```javascript
 const { getMinifiedSizes } = require('minified-size')
-const results = await minifiedSize({ files: [ 'lib/index.js' ] })
+const results = await getMinifiedSizes({ files: [ 'lib/index.js' ] })
 // [ { file: 'lib/index.js',
 //     originalSize: 2544,
 //     minifiedSize: 1482,
