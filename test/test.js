@@ -89,81 +89,81 @@ test.test('checks input parameters', async test => {
 
 test.test('supports file input', async test => {
   const script = 'lib/index.js'
-  const results = await minifiedSize({ files: [ script ] })
+  const results = await minifiedSize({ files: [script] })
   checkSuccess(test, script, results, true)
 })
 
 test.test('supports file input with a relative path and wildcards', async test => {
   const scripts = 'lib/*.js'
   const script = 'lib/index.js'
-  const results = await minifiedSize({ files: [ scripts ] })
+  const results = await minifiedSize({ files: [scripts] })
   checkSuccess(test, script, results, true)
 })
 
 test.test('supports file input with an absolute path and wildcards', async test => {
   const scripts = join(__dirname, '../lib/*.js')
   const script = join(__dirname, '../lib/index.js')
-  const results = await minifiedSize({ files: [ scripts ] })
+  const results = await minifiedSize({ files: [scripts] })
   checkSuccess(test, script, results, true)
 })
 
 test.test('reports directory listing error', async test => {
   const script = 'missing/*.js'
-  const results = await minifiedSize({ files: [ script ] })
+  const results = await minifiedSize({ files: [script] })
   checkError(test, script, results, false)
 })
 
 test.test('reports file reading error', async test => {
   const script = 'lib/missing.js'
-  const results = await minifiedSize({ files: [ script ] })
+  const results = await minifiedSize({ files: [script] })
   checkError(test, script, results, false)
 })
 
 test.test('supports string input', async test => {
   const script = 'function test () { console.log("OK") }'
-  const results = await minifiedSize({ sources: [ script ] })
+  const results = await minifiedSize({ sources: [script] })
   checkSuccess(test, 'source1', results, true)
 })
 
 test.test('reports source parsing error', async test => {
   const script = 'function () { console.log("OK") }'
-  const results = await minifiedSize({ sources: [ script ] })
+  const results = await minifiedSize({ sources: [script] })
   checkError(test, 'source1', results, true)
 })
 
 test.test('allows to disable gzipped size estimation', async test => {
   const script = 'function test () { console.log("OK") }'
-  const results = await minifiedSize({ sources: [ script ], gzip: false })
+  const results = await minifiedSize({ sources: [script], gzip: false })
   checkSuccess(test, 'source1', results, false)
 })
 
 test.test('reports invalid gzip options', async test => {
   const script = 'function test () { console.log("OK") }'
-  const results = await minifiedSize({ sources: [ script ], gzip: { level: Infinity } })
+  const results = await minifiedSize({ sources: [script], gzip: { level: Infinity } })
   checkError(test, 'source1', results, false)
 })
 
 test.test('supports stream input', async test => {
   const stream = createStream('function test () { console.log("OK") }')
-  const results = await minifiedSize({ streams: [ stream ] })
+  const results = await minifiedSize({ streams: [stream] })
   checkSuccess(test, 'stream1', results, true)
 })
 
 test.test('reports stream reading error', async test => {
   const stream = createStream()
-  const results = await minifiedSize({ streams: [ stream ] })
+  const results = await minifiedSize({ streams: [stream] })
   checkError(test, 'stream1', results, false)
 })
 
 test.test('minifier recognizes Unicode line breaks as whitespace', async test => {
   const script = 'test/module.txt'
-  const results = await minifiedSize({ files: [ script ] })
+  const results = await minifiedSize({ files: [script] })
   checkSuccess(test, script, results, true)
 })
 
 test.test('minifier does not escape Unicode characters', async test => {
   const script = 'message = "䅬朤堾..."'
-  const results = await minifiedSize({ sources: [ script ] })
+  const results = await minifiedSize({ sources: [script] })
   checkSuccess(test, 'source1', results, true, false)
   const { originalSize, minifiedSize: smallerSize } = results[0]
   test.ok(originalSize > smallerSize)
@@ -171,54 +171,54 @@ test.test('minifier does not escape Unicode characters', async test => {
 
 test.test('recognizes a stylesheet by its file extension', async test => {
   const stylesheet = 'test/stylesheet.css'
-  const results = await minifiedSize({ files: [ stylesheet ] })
+  const results = await minifiedSize({ files: [stylesheet] })
   checkSuccess(test, stylesheet, results, true)
 })
 
 test.test('forces the stylesheet-mode by a parameter', async test => {
   const stylesheet = '.button { padding: 1em }'
-  const results = await minifiedSize({ language: 'css', sources: [ stylesheet ] })
+  const results = await minifiedSize({ language: 'css', sources: [stylesheet] })
   checkSuccess(test, 'source1', results, true)
 })
 
 test.test('reports stylesheet parsing error', async test => {
   const script = '.button padding: 1em'
-  const results = await minifiedSize({ language: 'css', sources: [ script ] })
+  const results = await minifiedSize({ language: 'css', sources: [script] })
   checkError(test, 'source1', results, true)
 })
 
 test.test('reports minification error if an empty output is returned', async test => {
   const script = '.button { padding: }'
-  const results = await minifiedSize({ language: 'css', sources: [ script ] })
+  const results = await minifiedSize({ language: 'css', sources: [script] })
   checkError(test, 'source1', results, false)
 })
 
 test.test('recognizes a web page by its file extension', async test => {
   const page = 'test/page.html'
-  const results = await minifiedSize({ files: [ page ] })
+  const results = await minifiedSize({ files: [page] })
   checkSuccess(test, page, results, true)
 })
 
 test.test('forces the web-page-mode by a parameter', async test => {
   const page = '<html lang="en"></html>'
-  const results = await minifiedSize({ language: 'html', sources: [ page ] })
+  const results = await minifiedSize({ language: 'html', sources: [page] })
   checkSuccess(test, 'source1', results, true)
 })
 
 test.test('reports web page parsing error', async test => {
   const page = '<html lang="en"'
-  const results = await minifiedSize({ language: 'html', sources: [ page ] })
+  const results = await minifiedSize({ language: 'html', sources: [page] })
   checkError(test, 'source1', results, false)
 })
 
 test.test('works as a generator too', async test => {
-  const generator = generateMinifiedSizes({ files: [ 'test/*' ] })
+  const generator = generateMinifiedSizes({ files: ['test/*'] })
   for (;;) {
     const result = await generator.next()
     if (result.done) {
       break
     }
-    checkSuccess(test, result.value.file, [ result.value ], true, false)
+    checkSuccess(test, result.value.file, [result.value], true, false)
   }
   test.end()
 })

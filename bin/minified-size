@@ -39,7 +39,7 @@ const files = commander.args
 let streams
 if (!files.length) {
   if (args[args.length - 1] === '--') {
-    streams = [ process.stdin ]
+    streams = [process.stdin]
   } else {
     commander.help()
   }
