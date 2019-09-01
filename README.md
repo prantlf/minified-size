@@ -2,7 +2,7 @@
 [![NPM version](https://badge.fury.io/js/minified-size.png)](http://badge.fury.io/js/minified-size)
 [![Build Status](https://travis-ci.org/prantlf/minified-size.png)](https://travis-ci.org/prantlf/minified-size)
 [![codecov](https://codecov.io/gh/prantlf/minified-size/branch/master/graph/badge.svg)](https://codecov.io/gh/prantlf/minified-size)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8c076180afca4376bfd23726b000eb53)](https://www.codacy.com/app/prantlf/minified-size?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=prantlf/minified-size&amp;utm_campaign=Badge_Grade)
+[![Maintainability](https://api.codeclimate.com/v1/badges/8b145cbcf64c31ea8904/maintainability)](https://codeclimate.com/github/prantlf/minified-size/maintainability)
 [![Dependency Status](https://david-dm.org/prantlf/minified-size.svg)](https://david-dm.org/prantlf/minified-size)
 [![devDependency Status](https://david-dm.org/prantlf/minified-size/dev-status.svg)](https://david-dm.org/prantlf/minified-size#info=devDependencies)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
