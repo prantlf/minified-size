@@ -40,7 +40,7 @@
     "browser": false,
     "coverage-report": [
       "text-summary",
-      "html"
+      "lcov"
     ]
   },
   "dependencies": {

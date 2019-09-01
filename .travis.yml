@@ -3,7 +3,7 @@ node_js:
   - node
   - lts/*
 after_success:
-  - test `node --version | cut -c 2,3` -eq 10 && nyc report --reporter=text-lcov | npx coveralls
+  - test `node --version | cut -c 2,3` -eq 10 && npx codecov
   - npx semantic-release
 branches:
   except:

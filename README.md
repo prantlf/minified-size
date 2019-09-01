@@ -1,7 +1,7 @@
 # minified-size
 [![NPM version](https://badge.fury.io/js/minified-size.png)](http://badge.fury.io/js/minified-size)
 [![Build Status](https://travis-ci.org/prantlf/minified-size.png)](https://travis-ci.org/prantlf/minified-size)
-[![Coverage Status](https://coveralls.io/repos/github/prantlf/minified-size/badge.svg?branch=master)](https://coveralls.io/github/prantlf/minified-size?branch=master)
+[![codecov](https://codecov.io/gh/prantlf/minified-size/branch/master/graph/badge.svg)](https://codecov.io/gh/prantlf/minified-size)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/8c076180afca4376bfd23726b000eb53)](https://www.codacy.com/app/prantlf/minified-size?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=prantlf/minified-size&amp;utm_campaign=Badge_Grade)
 [![Dependency Status](https://david-dm.org/prantlf/minified-size.svg)](https://david-dm.org/prantlf/minified-size)
 [![devDependency Status](https://david-dm.org/prantlf/minified-size/dev-status.svg)](https://david-dm.org/prantlf/minified-size#info=devDependencies)
