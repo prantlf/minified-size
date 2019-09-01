@@ -36,6 +36,7 @@
     "test": "npm run lint && npm run check"
   },
   "tap": {
+    "esm": false,
     "browser": false,
     "coverage-report": [
       "text-summary",
