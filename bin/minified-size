@@ -101,7 +101,7 @@ function printResult ({ error, file, originalSize, minifiedSize, gzippedSize }) 
 (async () => {
   const results = await minifiedSize({ language, files, streams, gzip: printGzippedSize })
   if (json) {
-    console.log(results)
+    console.log(JSON.stringify(results, undefined, 2))
   } else {
     results.forEach(printResult)
   }
