@@ -31,30 +31,31 @@
   },
   "scripts": {
     "lint": "standard --verbose bin/minified-size lib/*.js test/*.js",
+    "lint:fix": "standard --verbose --fix bin/minified-size lib/*.js test/*.js",
     "check": "tap test/*.js --100",
     "test": "npm run lint && npm run check",
     "coverage": "test `node --version | cut -c 2,3` -eq 10 && npm run check -- --cov --coverage-report=lcov --no-browser"
   },
   "dependencies": {
-    "babel-minify": "0.5.0",
+    "babel-minify": "0.5.1",
     "chalk": "2.4.2",
-    "commander": "2.20.0",
+    "commander": "3.0.1",
     "@prantlf/crass": "0.12.4",
-    "fast-glob": "3.0.3",
+    "fast-glob": "3.0.4",
     "html-minifier": "4.0.0",
-    "pretty-bytes": "5.2.0",
-    "terser": "4.0.0"
+    "pretty-bytes": "5.3.0",
+    "terser": "4.2.1"
   },
   "devDependencies": {
-    "coveralls": "3.0.4",
-    "eslint": "6.0.1",
-    "eslint-config-standard": "12.0.0",
-    "eslint-plugin-import": "2.18.0",
-    "eslint-plugin-node": "9.1.0",
+    "coveralls": "3.0.6",
+    "eslint": "6.3.0",
+    "eslint-config-standard": "14.1.0",
+    "eslint-plugin-import": "2.18.2",
+    "eslint-plugin-node": "9.2.0",
     "eslint-plugin-promise": "4.2.1",
-    "eslint-plugin-standard": "4.0.0",
-    "standard": "12.0.1",
-    "tap": "14.3.1"
+    "eslint-plugin-standard": "4.0.1",
+    "standard": "14.1.0",
+    "tap": "14.6.1"
   },
   "keywords": [
     "size-calculation",
