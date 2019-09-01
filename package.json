@@ -32,9 +32,15 @@
   "scripts": {
     "lint": "standard --verbose bin/minified-size lib/*.js test/*.js",
     "lint:fix": "standard --verbose --fix bin/minified-size lib/*.js test/*.js",
-    "check": "tap test/*.js --100",
-    "test": "npm run lint && npm run check",
-    "coverage": "test `node --version | cut -c 2,3` -eq 10 && npm run check -- --cov --coverage-report=lcov --no-browser"
+    "check": "tap --100",
+    "test": "npm run lint && npm run check"
+  },
+  "tap": {
+    "browser": false,
+    "coverage-report": [
+      "text-summary",
+      "html"
+    ]
   },
   "dependencies": {
     "babel-minify": "0.5.1",
@@ -47,7 +53,6 @@
     "terser": "4.2.1"
   },
   "devDependencies": {
-    "coveralls": "3.0.6",
     "eslint": "6.3.0",
     "eslint-config-standard": "14.1.0",
     "eslint-plugin-import": "2.18.2",
