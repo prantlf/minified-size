@@ -47,21 +47,21 @@
     "babel-minify": "0.5.1",
     "chalk": "2.4.2",
     "commander": "3.0.1",
-    "@prantlf/crass": "0.12.4",
+    "@prantlf/crass": "0.12.5",
     "fast-glob": "3.0.4",
     "html-minifier": "4.0.0",
     "pretty-bytes": "5.3.0",
-    "terser": "4.2.1"
+    "terser": "4.3.1"
   },
   "devDependencies": {
-    "eslint": "6.3.0",
+    "eslint": "6.4.0",
     "eslint-config-standard": "14.1.0",
     "eslint-plugin-import": "2.18.2",
-    "eslint-plugin-node": "9.2.0",
+    "eslint-plugin-node": "10.0.0",
     "eslint-plugin-promise": "4.2.1",
     "eslint-plugin-standard": "4.0.1",
-    "standard": "14.1.0",
-    "tap": "14.6.1"
+    "standard": "14.3.1",
+    "tap": "14.6.5"
   },
   "keywords": [
     "size-calculation",
