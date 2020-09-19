@@ -186,21 +186,21 @@ An example of measuring a cocktail of 8 MB in 50 JavaScript libraries (Require, 
 ```text
 $ minified-size --minifier=esbuild libs/*.js
 
-real	0m0.749s
-user	0m0.779s
-sys	  0m0.143s
+real  0m0.749s
+user  0m0.779s
+sys   0m0.143s
 
 $ minified-size --minifier=terser libs/*.js
 
-real	0m7.444s
-user	0m11.281s
-sys	  0m0.308s
+real  0m7.444s
+user  0m11.281s
+sys   0m0.308s
 
 $ minified-size --minifier=babel libs/*.js
 
-real	0m20.084s
-user	0m27.961s
-sys	  0m0.730s
+real  0m20.084s
+user  0m27.961s
+sys   0m0.730s
 ```
 
 ## Contributing
