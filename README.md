@@ -51,6 +51,7 @@ Options:
 -o, --no-original-size     prevents printing the size of the original code
 -m, --no-minified-size     prevents printing the size of the minified code
 -g, --no-gzipped-size      prevents printing the size of the gzipped code
+-t, --no-total             prevents printing the total sizes
 -i, --minifier [minifier]  chooses the JavaScript minifier (default: "esbuild")
 -h, --help                 display help for command
 
@@ -117,6 +118,18 @@ for (;;) {
     console.error(`${file}: ${error}`)
   }
 }
+```
+
+You can compute total sizes from all file results:
+
+```javascript
+const { getMinifiedSizes, computeTotalSizes } = require('minified-size')
+const results = await getMinifiedSizes({ files: [ 'foo.js', 'bar.js' ] })
+const total = computeTotalSizes(results)
+// { total: true,
+//   originalSize: 89745,
+//   minifiedSize: 8562,
+//   gzippedSize: 2341 }
 ```
 
 ### Options
@@ -209,6 +222,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+* 2020-09-19   v2.2.0   Print total sizes
 * 2020-09-19   v2.1.0   Use esbuild for better speed, terser and babel-minify are optional
 * 2019-06-21   v2.0.0   Print results for each file early; do not wait, until all are processed
 * 2019-06-21   v1.2.0   Support stylesheets (CSS) and web pages (HTML)

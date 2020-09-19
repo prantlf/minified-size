@@ -3,6 +3,7 @@
 const minifiedSize = require('..')
 const getMinifiedSizes = minifiedSize.getMinifiedSizes
 const generateMinifiedSizes = minifiedSize.generateMinifiedSizes
+const computeTotalSizes = minifiedSize.computeTotalSizes
 const { Readable } = require('stream')
 const { join, normalize } = require('path')
 const test = require('tap')
@@ -272,5 +273,26 @@ test.test('works as a generator too', async test => {
     }
     checkSuccess(test, result.value.file, [result.value], true, false)
   }
+  test.end()
+})
+
+test.test('computes total sizes from successful results', async test => {
+  const total = computeTotalSizes([
+    { originalSize: 3, minifiedSize: 2, gzippedSize: 1 },
+    { error: {} },
+    { originalSize: 30, minifiedSize: 20, gzippedSize: 10 }
+  ])
+  test.deepEqual(total, {
+    total: true, originalSize: 33, minifiedSize: 22, gzippedSize: 11
+  })
+  test.end()
+})
+
+test.test('computes total sizes without gzipped size', async test => {
+  const total = computeTotalSizes([
+    { originalSize: 3, minifiedSize: 2 },
+    { originalSize: 30, minifiedSize: 20 }
+  ])
+  test.deepEqual(total, { total: true, originalSize: 33, minifiedSize: 22 })
   test.end()
 })

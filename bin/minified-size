@@ -3,7 +3,7 @@
 'use strict'
 
 const commander = require('commander')
-const { getMinifiedSizes, generateMinifiedSizes } = require('..')
+const { getMinifiedSizes, generateMinifiedSizes, computeTotalSizes } = require('..')
 const prettyBytes = require('pretty-bytes')
 const chalk = require('chalk')
 const pkg = require('../package.json')
@@ -17,6 +17,7 @@ commander.version(pkg.version)
   .option('-o, --no-original-size', 'prevents printing the size of the original code')
   .option('-m, --no-minified-size', 'prevents printing the size of the minified code')
   .option('-g, --no-gzipped-size', 'prevents printing the size of the gzipped code')
+  .option('-t, --no-total', 'prevents printing the total sizes')
   .option('-i, --minifier [minifier]', 'chooses the JavaScript minifier', 'esbuild')
 
 commander.on('--help', () => {
@@ -48,7 +49,7 @@ if (!files.length) {
 }
 
 const {
-  language, json, rawSizes, originalSize: printOriginalSize,
+  language, json, total: printTotal, rawSizes, originalSize: printOriginalSize,
   minifiedSize: printMinifiedSize, gzippedSize: printGzippedSize, minifier
 } = commander
 
@@ -105,16 +106,23 @@ function printResult ({ error, file, originalSize, minifiedSize, gzippedSize }) 
     const results = await getMinifiedSizes({
       language, files, streams, gzip: printGzippedSize, minifier
     })
+    if (printTotal && results.length > 1) {
+      results.push(computeTotalSizes(results))
+    }
     console.log(JSON.stringify(results, undefined, 2))
   } else {
     const generator = generateMinifiedSizes({
       language, files, streams, gzip: printGzippedSize, minifier
     })
-    for (;;) {
+    for (const results = []; ;) {
       const result = await generator.next()
       if (result.done) {
+        if (printTotal && results.length > 1) {
+          printResult({ file: 'total', ...computeTotalSizes(results) })
+        }
         break
       }
+      results.push(result.value)
       printResult(result.value)
     }
   }
