@@ -29,6 +29,10 @@
   "bin": {
     "minified-size": "./bin/minified-size"
   },
+  "files": [
+    "bin",
+    "lib"
+  ],
   "scripts": {
     "lint": "standard --verbose bin/minified-size lib/*.js test/*.js",
     "lint:fix": "standard --verbose --fix bin/minified-size lib/*.js test/*.js",
@@ -45,23 +49,23 @@
   },
   "dependencies": {
     "babel-minify": "0.5.1",
-    "chalk": "2.4.2",
-    "commander": "3.0.1",
+    "chalk": "4.1.0",
+    "commander": "6.1.0",
     "@prantlf/crass": "0.12.5",
-    "fast-glob": "3.0.4",
+    "fast-glob": "3.2.4",
     "html-minifier": "4.0.0",
-    "pretty-bytes": "5.3.0",
-    "terser": "4.3.1"
+    "pretty-bytes": "5.4.1",
+    "terser": "5.3.2"
   },
   "devDependencies": {
-    "eslint": "6.4.0",
-    "eslint-config-standard": "14.1.0",
-    "eslint-plugin-import": "2.18.2",
-    "eslint-plugin-node": "10.0.0",
+    "eslint": "7.9.0",
+    "eslint-config-standard": "14.1.1",
+    "eslint-plugin-import": "2.22.0",
+    "eslint-plugin-node": "11.1.0",
     "eslint-plugin-promise": "4.2.1",
     "eslint-plugin-standard": "4.0.1",
-    "standard": "14.3.1",
-    "tap": "14.6.5"
+    "standard": "14.3.4",
+    "tap": "14.10.8"
   },
   "keywords": [
     "size-calculation",
