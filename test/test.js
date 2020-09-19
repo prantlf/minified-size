@@ -39,7 +39,7 @@ function checkError (test, script, results, parsing, end) {
   test.ok(typeof message === 'string')
   if (parsing) {
     test.ok(typeof reason === 'string')
-    test.ok(reason.length < message.length)
+    test.ok(reason.length <= message.length)
     test.equal(line, 1)
     if (column) {
       test.equal(column, 10)
@@ -125,9 +125,21 @@ test.test('supports string input', async test => {
   checkSuccess(test, 'source1', results, true)
 })
 
-test.test('reports source parsing error', async test => {
+test.test('reports source parsing error with esbuild', async test => {
   const script = 'function () { console.log("OK") }'
-  const results = await minifiedSize({ sources: [script] })
+  const results = await minifiedSize({ sources: [script], minifier: 'esbuild' })
+  checkError(test, 'source1', results, true)
+})
+
+test.test('reports source parsing error with terser', async test => {
+  const script = 'function () { console.log("OK") }'
+  const results = await minifiedSize({ sources: [script], minifier: 'terser' })
+  checkError(test, 'source1', results, true)
+})
+
+test.test('reports source parsing error with babel', async test => {
+  const script = 'function () { console.log("OK") }'
+  const results = await minifiedSize({ sources: [script], minifier: 'babel' })
   checkError(test, 'source1', results, true)
 })
 
@@ -140,6 +152,30 @@ test.test('allows to disable gzipped size estimation', async test => {
 test.test('reports invalid gzip options', async test => {
   const script = 'function test () { console.log("OK") }'
   const results = await minifiedSize({ sources: [script], gzip: { level: Infinity } })
+  checkError(test, 'source1', results, false)
+})
+
+test.test('supports esbuild as minifier', async test => {
+  const script = 'function test () { console.log("OK") }'
+  const results = await minifiedSize({ sources: [script], minifier: 'esbuild', gzip: false })
+  checkSuccess(test, 'source1', results, false)
+})
+
+test.test('supports terser as minifier', async test => {
+  const script = 'function test () { console.log("OK") }'
+  const results = await minifiedSize({ sources: [script], minifier: 'terser', gzip: false })
+  checkSuccess(test, 'source1', results, false)
+})
+
+test.test('supports babel as minifier', async test => {
+  const script = 'function test () { console.log("OK") }'
+  const results = await minifiedSize({ sources: [script], minifier: 'babel', gzip: false })
+  checkSuccess(test, 'source1', results, false)
+})
+
+test.test('reports an invalid minifier', async test => {
+  const script = 'function test () { console.log("OK") }'
+  const results = await minifiedSize({ sources: [script], minifier: 'invalid' })
   checkError(test, 'source1', results, false)
 })
 
@@ -161,12 +197,28 @@ test.test('minifier recognizes Unicode line breaks as whitespace', async test =>
   checkSuccess(test, script, results, true)
 })
 
-test.test('minifier does not escape Unicode characters', async test => {
+test.test('esbuild does not escape Unicode characters', async test => {
   const script = 'message = "䅬朤堾..."'
-  const results = await minifiedSize({ sources: [script] })
+  const results = await minifiedSize({ sources: [script], minifier: 'esbuild' })
   checkSuccess(test, 'source1', results, true, false)
   const { originalSize, minifiedSize: smallerSize } = results[0]
-  test.ok(originalSize > smallerSize)
+  test.ok(originalSize >= smallerSize)
+})
+
+test.test('terser does not escape Unicode characters', async test => {
+  const script = 'message = "䅬朤堾..."'
+  const results = await minifiedSize({ sources: [script], minifier: 'terser' })
+  checkSuccess(test, 'source1', results, true, false)
+  const { originalSize, minifiedSize: smallerSize } = results[0]
+  test.ok(originalSize >= smallerSize)
+})
+
+test.test('babel does not escape Unicode characters', async test => {
+  const script = 'message = "䅬朤堾..."'
+  const results = await minifiedSize({ sources: [script], minifier: 'babel' })
+  checkSuccess(test, 'source1', results, true, false)
+  const { originalSize, minifiedSize: smallerSize } = results[0]
+  test.ok(originalSize >= smallerSize)
 })
 
 test.test('recognizes a stylesheet by its file extension', async test => {

@@ -1,8 +1,9 @@
 dependencies:
-  '@prantlf/crass': 0.12.5
+  '@prantlf/crass': 0.12.6
   babel-minify: 0.5.1
   chalk: 4.1.0
   commander: 6.1.0
+  esbuild: 0.7.2
   fast-glob: 3.2.4
   html-minifier: 4.0.0
   pretty-bytes: 5.4.1
@@ -285,7 +286,7 @@ packages:
       node: '>= 8'
     resolution:
       integrity: sha512-1V9XOY4rDW0rehzbrcqAmHnz8e7SKvX27gh8Gt2WgB0+pdzdiLV83p72kZPU+jvMbS1qU5mauP2iOvO8rhmurQ==
-  /@prantlf/crass/0.12.5:
+  /@prantlf/crass/0.12.6:
     dependencies:
       '@prantlf/svgo': 0.7.4
       color-convert: 2.0.1
@@ -295,7 +296,7 @@ packages:
       node: '>=6.11.2'
     hasBin: true
     resolution:
-      integrity: sha512-GvQwa3Skxr+vZIT1obUkHKFfW7PKLJuqYeR2TBYi7UxwHkv+qLtdiQtrPpPUIVyymYeLSWibAV6BoUISFNIi0w==
+      integrity: sha512-eV4g50vasLbxrqw6Q2+4PI91CHEzpgKXrO3p39Y8wKZSR9WJMrhRfhOox2sFCn1ndcefw36w70q8x2aZeXAKkw==
   /@prantlf/svgo/0.7.4:
     dependencies:
       coa: 2.0.2
@@ -1187,6 +1188,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-Um/+FxMr9CISWh0bi5Zv0iOD+4cFh5qLeks1qhAopKVAJw3drgKbKySikp7wGhDL0HPeaja0P5ULZrxLkniUVg==
+  /esbuild/0.7.2:
+    dev: false
+    hasBin: true
+    requiresBuild: true
+    resolution:
+      integrity: sha512-KyMvZ9zNe7AvcWkU0/BwVqNq6Hk/+xXjgaZHVjHlTNaz9FO21Ehx0yZiwBRYaWmPxDHvCAvo9vzJHOVCjqZC4w==
   /escape-string-regexp/1.0.5:
     engines:
       node: '>=0.8.0'
@@ -3907,10 +3914,11 @@ packages:
     resolution:
       integrity: sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==
 specifiers:
-  '@prantlf/crass': 0.12.5
+  '@prantlf/crass': 0.12.6
   babel-minify: 0.5.1
   chalk: 4.1.0
   commander: 6.1.0
+  esbuild: 0.7.2
   eslint: 7.9.0
   eslint-config-standard: 14.1.1
   eslint-plugin-import: 2.22.0

@@ -17,6 +17,7 @@ commander.version(pkg.version)
   .option('-o, --no-original-size', 'prevents printing the size of the original code')
   .option('-m, --no-minified-size', 'prevents printing the size of the minified code')
   .option('-g, --no-gzipped-size', 'prevents printing the size of the gzipped code')
+  .option('-i, --minifier [minifier]', 'chooses the JavaScript minifier', 'esbuild')
 
 commander.on('--help', () => {
   console.log()
@@ -25,6 +26,7 @@ commander.on('--help', () => {
   console.log('  Stylesheets are recognized by the extension ".css", or they can be forced')
   console.log('  by the language "css" on the command line. Web pages are recognized by the')
   console.log('  extension ".htm[l]", or they can be forced by the language "html".')
+  console.log('  The JavaScript minifier can be "esbuild", "terser" or "babel".')
   console.log()
   console.log('  Examples:')
   console.log()
@@ -47,7 +49,7 @@ if (!files.length) {
 
 const {
   language, json, rawSizes, originalSize: printOriginalSize,
-  minifiedSize: printMinifiedSize, gzippedSize: printGzippedSize
+  minifiedSize: printMinifiedSize, gzippedSize: printGzippedSize, minifier
 } = commander
 
 function printError (file, { message, line, column }) {
@@ -101,12 +103,12 @@ function printResult ({ error, file, originalSize, minifiedSize, gzippedSize }) 
 (async () => {
   if (json) {
     const results = await getMinifiedSizes({
-      language, files, streams, gzip: printGzippedSize
+      language, files, streams, gzip: printGzippedSize, minifier
     })
     console.log(JSON.stringify(results, undefined, 2))
   } else {
     const generator = generateMinifiedSizes({
-      language, files, streams, gzip: printGzippedSize
+      language, files, streams, gzip: printGzippedSize, minifier
     })
     for (;;) {
       const result = await generator.next()
