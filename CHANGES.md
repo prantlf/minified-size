@@ -1,5 +1,9 @@
 # Changes
 
+## 2.3.0
+
+Estimate the size of the brotli-compressed minified code
+
 ## 2.2.1
 
 * Estimate the gzipped size using gzip and not deflate
