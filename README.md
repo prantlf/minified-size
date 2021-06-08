@@ -68,7 +68,7 @@ If parsing of the input or its minification fails, a colourful error message wit
 
 ```text
 $ minified-size test/invalid.js
-test/module.txt(1,7): unknown: Unexpected token, expected ";"
+test/invalid.js(1,7): unknown: Unexpected token, expected ";"
 
 > 1 | exort default {
     |       ^
@@ -158,7 +158,7 @@ const results = await minifiedSize({ files })
 //       reason: 'unknown: Unexpected token, expected ";"',
 //       line: 1,
 //       column: 7,
-//       message: `test/module.txt(1,7): unknown: Unexpected token, expected ";"
+//       message: `test/invalid.js(1,7): unknown: Unexpected token, expected ";"
 //
 // > 1 | exort default {
 //     |       ^
@@ -192,7 +192,7 @@ function replaceEscapedUnicodeCharacters (source) {
 
 The size computation done by `minified-size` uses the function above to ensure correct results until the issue [babel-minify/619] is resolved.
 
-Other minifiers ([esbuild] and [terser]) do not suffer from this issue.
+Other minifiers ([esbuild] and [terser]) do not suffer from this issue. ([esbuild] needs the option `charset=utf8` added.)
 
 ## Performance
 

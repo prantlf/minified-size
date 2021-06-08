@@ -2,7 +2,9 @@
 
 ## 2.3.0
 
-Estimate the size of the brotli-compressed minified code
+* Estimate the size of the brotli-compressed minified code
+* Estimate the gzipped size using gzip and not deflate
+* Upgrade package dependencies
 
 ## 2.2.1
 
