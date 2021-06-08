@@ -51,7 +51,7 @@ if (!files.length) {
 const {
   language, json, total: printTotal, rawSizes, originalSize: printOriginalSize,
   minifiedSize: printMinifiedSize, gzippedSize: printGzippedSize, minifier
-} = commander
+} = commander.opts()
 
 function printError (file, { message, line, column }) {
   let prefix = file

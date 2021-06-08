@@ -222,6 +222,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+* 2021-06-08   v2.2.1   Upgrade dependencies
 * 2020-09-19   v2.2.0   Print total sizes
 * 2020-09-19   v2.1.0   Use esbuild for better speed, terser and babel-minify are optional
 * 2019-06-21   v2.0.0   Print results for each file early; do not wait, until all are processed
@@ -234,7 +235,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## License
 
-Copyright (c) 2018-2020 Ferdinand Prantl
+Copyright (c) 2018-2021 Ferdinand Prantl
 
 Licensed under the MIT license.
 
