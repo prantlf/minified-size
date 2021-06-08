@@ -7,7 +7,7 @@
 [![devDependency Status](https://david-dm.org/prantlf/minified-size/dev-status.svg)](https://david-dm.org/prantlf/minified-size#info=devDependencies)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
-Estimates the size of minified and gzipped JavaScript, CSS and HTML files [very fast](#performance). Check, how much space will a particular source take in the minified output.
+Estimates the size of minified and gzipped/brotlied JavaScript, CSS and HTML files [very fast](#performance). Check, how much space will a particular source take in the minified output.
 
 - [Command-line Usage](#command-line-usage)
 - [Programmatic Usage](#programmatic-usage)
@@ -28,11 +28,11 @@ pnpm i -g minified-size
 yarn global add minified-size
 ```
 
-Print the original, expected minified and gzipped sizes of a sample file:
+Print the original, expected minified, gzipped and brotlied sizes of a sample file:
 
 ```text
 $ minified-size lib/index.js
-lib/index.js: 2.54 kB, 1.48 kB, 643 B
+lib/index.js: 10.4 kB, 5.97 kB, 2.17 kB, 1.91 kB
 ```
 
 Running `minified-size` without any parameters will print usage instructions:
@@ -49,11 +49,12 @@ Options:
 -o, --no-original-size     prevents printing the size of the original code
 -m, --no-minified-size     prevents printing the size of the minified code
 -g, --no-gzipped-size      prevents printing the size of the gzipped code
+-b, --no-brotlied-size     prevents printing the size of the brotlied code
 -t, --no-total             prevents printing the total sizes
 -i, --minifier [minifier]  chooses the JavaScript minifier (default: "esbuild")
 -h, --help                 display help for command
 
-All three sizes are estimated by default. File paths may contain wildcards.
+All four sizes are estimated by default. File paths may contain wildcards.
 If "--" is entered instead of files, the standard input will be read.
 Stylesheets are recognized by the extension ".css", or they can be forced
 by the language "css" on the command line. Web pages are recognized by the
@@ -86,15 +87,16 @@ pnpm i minified-size
 yarn add minified-size
 ```
 
-Get the original, expected minified and gzipped sizes (in bytes) of a sample file:
+Get the original, expected minified, gzipped and brotlied sizes (in bytes) of a sample file:
 
 ```javascript
 const { getMinifiedSizes } = require('minified-size')
 const results = await getMinifiedSizes({ files: [ 'lib/index.js' ] })
 // [ { file: 'lib/index.js',
-//     originalSize: 2544,
-//     minifiedSize: 1482,
-//     gzippedSize: 643 } ]
+//     originalSize: 10374,
+//     minifiedSize: 5974,
+//     gzippedSize: 2167,
+//     brotliedSize: 1905 } ]
 ```
 
 If you process a lot of files, you can use an asynchronous generator, which yields results one-by-one to get them earlier, instead of returning an array with all of them together:
@@ -109,9 +111,11 @@ for (;;) {
   if (result.done) {
     break
   }
-  const { error, file, originalSize, minifiedSize, gzippedSize } = result.value
+  const {
+    error, file, originalSize, minifiedSize, gzippedSize, brotliedSize
+  } = result.value
   if (error) {
-    console.info(`${file}: ${originalSize}, ${minifiedSize}, ${gzippedSize}`)
+    console.info(`${file}: ${originalSize}, ${minifiedSize}, ${gzippedSize}, ${brotliedSize}`)
   } else {
     console.error(`${file}: ${error}`)
   }
@@ -127,7 +131,8 @@ const total = computeTotalSizes(results)
 // { total: true,
 //   originalSize: 89745,
 //   minifiedSize: 8562,
-//   gzippedSize: 2341 }
+//   gzippedSize: 2341,
+//   brotliedSize: 2065 }
 ```
 
 ### Options
@@ -137,6 +142,7 @@ const total = computeTotalSizes(results)
 * `streams` - an array of readable streams with source code to process
 * `sources` - an array of strings with source code to process
 * `gzip` - a boolean to disable estimating the gzipped output size, or an object with [options for gzip].
+* `brotli` - a boolean to disable estimating the brotlied output size, or an object with [parameters for brotli].
 * `minifier` - a string choosing the JavaScript minifier ("esbuild" - default, "terser" or "babel")
 
 ### Errors
@@ -225,7 +231,8 @@ Copyright (c) 2018-2021 Ferdinand Prantl
 Licensed under the MIT license.
 
 [Node.js]: http://nodejs.org/
-[options for gzip]: https://nodejs.org/docs/latest-v8.x/api/zlib.html#zlib_class_options
+[options for gzip]: https://nodejs.org/docs/latest-v10.x/api/zlib.html#zlib_class_options
+[parameters for brotli]: https://nodejs.org/docs/latest-v10.x/api/zlib.html#zlib_compressor_options
 [babel-minify/619]: https://github.com/babel/minify/issues/619
 [esbuild]: https://github.com/evanw/esbuild#readme
 [terser]: https://github.com/terser/terser#readme

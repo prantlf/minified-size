@@ -17,12 +17,13 @@ commander.version(pkg.version)
   .option('-o, --no-original-size', 'prevents printing the size of the original code')
   .option('-m, --no-minified-size', 'prevents printing the size of the minified code')
   .option('-g, --no-gzipped-size', 'prevents printing the size of the gzipped code')
+  .option('-b, --no-brotlied-size', 'prevents printing the size of the brotlied code')
   .option('-t, --no-total', 'prevents printing the total sizes')
   .option('-i, --minifier [minifier]', 'chooses the JavaScript minifier', 'esbuild')
 
 commander.on('--help', () => {
   console.log()
-  console.log('  All three sizes are estimated by default. File paths may contain wildcards.')
+  console.log('  All four sizes are estimated by default. File paths may contain wildcards.')
   console.log('  If "--" is entered instead of files, the standard input will be read.')
   console.log('  Stylesheets are recognized by the extension ".css", or they can be forced')
   console.log('  by the language "css" on the command line. Web pages are recognized by the')
@@ -50,7 +51,8 @@ if (!files.length) {
 
 const {
   language, json, total: printTotal, rawSizes, originalSize: printOriginalSize,
-  minifiedSize: printMinifiedSize, gzippedSize: printGzippedSize, minifier
+  minifiedSize: printMinifiedSize, gzippedSize: printGzippedSize,
+  brotliedSize: printBrotliedSize, minifier
 } = commander.opts()
 
 function printError (file, { message, line, column }) {
@@ -79,7 +81,7 @@ function printError (file, { message, line, column }) {
   console.log(`${prefix} ${message}`)
 }
 
-function printResult ({ error, file, originalSize, minifiedSize, gzippedSize }) {
+function printResult ({ error, file, originalSize, minifiedSize, gzippedSize, brotliedSize }) {
   if (error) {
     printError(file, error)
   } else {
@@ -93,6 +95,9 @@ function printResult ({ error, file, originalSize, minifiedSize, gzippedSize }) 
     if (printGzippedSize) {
       sizes.push(gzippedSize)
     }
+    if (printBrotliedSize) {
+      sizes.push(brotliedSize)
+    }
     if (!rawSizes) {
       sizes = sizes.map(prettyBytes)
     }
@@ -104,7 +109,12 @@ function printResult ({ error, file, originalSize, minifiedSize, gzippedSize }) 
 (async () => {
   if (json) {
     const results = await getMinifiedSizes({
-      language, files, streams, gzip: printGzippedSize, minifier
+      language,
+      files,
+      streams,
+      gzip: printGzippedSize,
+      brotli: printBrotliedSize,
+      minifier
     })
     if (printTotal && results.length > 1) {
       results.push(computeTotalSizes(results))
@@ -112,7 +122,12 @@ function printResult ({ error, file, originalSize, minifiedSize, gzippedSize }) 
     console.log(JSON.stringify(results, undefined, 2))
   } else {
     const generator = generateMinifiedSizes({
-      language, files, streams, gzip: printGzippedSize, minifier
+      language,
+      files,
+      streams,
+      gzip: printGzippedSize,
+      brotli: printBrotliedSize,
+      minifier
     })
     for (const results = []; ;) {
       const result = await generator.next()

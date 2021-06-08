@@ -1,7 +1,7 @@
 {
   "name": "minified-size",
   "version": "2.2.1",
-  "description": "Estimates the size of minified and gzipped JavaScript, CSS and HTML files.",
+  "description": "Estimates the size of minified and gzipped/brotlied JavaScript, CSS and HTML files.",
   "author": {
     "name": "Ferdinand Prantl",
     "email": "prantlf@gmail.com",
@@ -35,7 +35,7 @@
   ],
   "scripts": {
     "lint": "standard --verbose bin/minified-size lib/*.js test/*.js",
-    "lint:fix": "standard --verbose --fix bin/minified-size lib/*.js test/*.js",
+    "fix": "standard --verbose --fix bin/minified-size lib/*.js test/*.js",
     "check": "tap --100",
     "test": "npm run lint && npm run check"
   },
@@ -70,9 +70,11 @@
   "keywords": [
     "size-calculation",
     "gziped-files",
+    "brotlied-files",
     "estimate",
     "minify",
     "gzip",
+    "brotli",
     "script",
     "javascript",
     "js",
