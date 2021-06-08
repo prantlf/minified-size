@@ -1,6 +1,6 @@
 {
   "name": "minified-size",
-  "version": "0.0.0-development",
+  "version": "2.2.1",
   "description": "Estimates the size of minified and gzipped JavaScript, CSS and HTML files.",
   "author": {
     "name": "Ferdinand Prantl",

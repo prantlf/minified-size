@@ -1,13 +1,11 @@
 # minified-size
 [![NPM version](https://badge.fury.io/js/minified-size.png)](http://badge.fury.io/js/minified-size)
-[![Build Status](https://travis-ci.org/prantlf/minified-size.png)](https://travis-ci.org/prantlf/minified-size)
+[![Build Status](https://github.com/prantlf/minified-size/workflows/Test/badge.svg)](https://github.com/prantlf/minified-size/actions)
 [![codecov](https://codecov.io/gh/prantlf/minified-size/branch/master/graph/badge.svg)](https://codecov.io/gh/prantlf/minified-size)
 [![Maintainability](https://api.codeclimate.com/v1/badges/8b145cbcf64c31ea8904/maintainability)](https://codeclimate.com/github/prantlf/minified-size/maintainability)
 [![Dependency Status](https://david-dm.org/prantlf/minified-size.svg)](https://david-dm.org/prantlf/minified-size)
 [![devDependency Status](https://david-dm.org/prantlf/minified-size/dev-status.svg)](https://david-dm.org/prantlf/minified-size#info=devDependencies)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
-
-[![NPM Downloads](https://nodei.co/npm/minified-size.png?downloads=true&stars=true)](https://www.npmjs.com/package/minified-size)
 
 Estimates the size of minified and gzipped JavaScript, CSS and HTML files [very fast](#performance). Check, how much space will a particular source take in the minified output.
 
@@ -219,19 +217,6 @@ sys   0m0.730s
 ## Contributing
 
 In lieu of a formal styleguide, take care to maintain the existing coding style.  Add unit tests for any new or changed functionality. Lint and test your code using Grunt.
-
-## Release History
-
-* 2021-06-08   v2.2.1   Upgrade dependencies
-* 2020-09-19   v2.2.0   Print total sizes
-* 2020-09-19   v2.1.0   Use esbuild for better speed, terser and babel-minify are optional
-* 2019-06-21   v2.0.0   Print results for each file early; do not wait, until all are processed
-* 2019-06-21   v1.2.0   Support stylesheets (CSS) and web pages (HTML)
-* 2019-06-20   v1.0.0   Support full Unicode and prints better error messages
-* 2018-08-31   v0.2.2   Support Windows paths
-* 2018-08-31   v0.2.0   Support source code read from standard input
-* 2018-08-31   v0.1.0   Support wildcards in the input file paths
-* 2018-08-31   v0.0.1   Initial release
 
 ## License
 
