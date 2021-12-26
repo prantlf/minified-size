@@ -1,5 +1,9 @@
 # Changes
 
+## 2.3.1
+
+* Upgrade package dependencies
+
 ## 2.3.0
 
 * Estimate the size of the brotli-compressed minified code
