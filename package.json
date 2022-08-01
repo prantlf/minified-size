@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "@prantlf/crass": "0.12.6",
+    "@swc/core": "^1.2.220",
     "babel-minify": "0.5.2",
     "colorette": "^2.0.19",
     "commander": "9.4.0",

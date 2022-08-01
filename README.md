@@ -51,7 +51,7 @@ Options:
 -g, --no-gzipped-size      prevents printing the size of the gzipped code
 -b, --no-brotlied-size     prevents printing the size of the brotlied code
 -t, --no-total             prevents printing the total sizes
--i, --minifier [minifier]  chooses the JavaScript minifier (default: "esbuild")
+-i, --minifier [minifier]  chooses the JavaScript minifier (default: "swc")
 -h, --help                 display help for command
 
 All four sizes are estimated by default. File paths may contain wildcards.
@@ -59,7 +59,7 @@ If "--" is entered instead of files, the standard input will be read.
 Stylesheets are recognized by the extension ".css", or they can be forced
 by the language "css" on the command line. Web pages are recognized by the
 extension ".htm[l]", or they can be forced by the language "html".
-The JavaScript minifier can be "esbuild", "terser" or "babel".
+The JavaScript minifier can be "swc", "esbuild", "terser" or "babel".
 ```
 
 ### Errors
@@ -143,7 +143,7 @@ const total = computeTotalSizes(results)
 * `sources` - an array of strings with source code to process
 * `gzip` - a boolean to disable estimating the gzipped output size, or an object with [options for gzip].
 * `brotli` - a boolean to disable estimating the brotlied output size, or an object with [parameters for brotli].
-* `minifier` - a string choosing the JavaScript minifier ("esbuild" - default, "terser" or "babel")
+* `minifier` - a string choosing the JavaScript minifier ("swc" - default, "esbuild", "terser" or "babel")
 
 ### Errors
 
@@ -192,32 +192,34 @@ function replaceEscapedUnicodeCharacters (source) {
 
 The size computation done by `minified-size` uses the function above to ensure correct results until the issue [babel-minify/619] is resolved.
 
-Other minifiers ([esbuild] and [terser]) do not suffer from this issue. ([esbuild] needs the option `charset=utf8` added.)
+Other minifiers ([swc], [esbuild] and [terser]) do not suffer from this issue. ([esbuild] needs the option `charset=utf8` added.)
 
 ## Performance
 
-The JavaScript minifier affects the performance the most. The fastest one is [esbuild], which is used by default. Other minifiers ([terser] and [babel-minify]) can be chosen as a workaround by the `minifier` option, if the default minifier cannot process some source, or just to compare the results of the minifiers.
+The JavaScript minifier affects the performance the most. The most efficient one that supports all JavaScript inputs is [swc], which is used by default. Other minifiers ([esbuild], [terser] and [babel-minify]) can be chosen as a workaround by the `minifier` option, if the default minifier cannot process some source, or just to compare the results of the minifiers.
 
-An example of measuring a cocktail of 8 MB in 50 JavaScript libraries (Require, Underscore, jQuery, Backbone, Backbone.Radio, Handlebars, Marionette, Moment, Moment-Timezone, Ally, Hammer, Less etc.) shows the huge difference between the minifiers:
+An example of measuring a cocktail of 6.5 MB in 65 JavaScript libraries (Require, Underscore, jQuery, Backbone, Backbone.Radio, Handlebars, Marionette, Moment, Moment-Timezone, Ally, Hammer, Less etc.) shows the huge difference between the minifiers:
 
 ```text
-$ minified-size --minifier=esbuild libs/*.js
+$ time minified-size -ogbr -i swc libs/*.js
+...
+total: 3009049
+2,68s user 0,29s system 126% cpu 2,354 total
 
-real  0m0.749s
-user  0m0.779s
-sys   0m0.143s
+$ time minified-size -ogbr -i esbuild libs/*.js
+...
+total: 3019802
+1,13s user 0,25s system 127% cpu 1,085 total
 
-$ minified-size --minifier=terser libs/*.js
+$ time minified-size -ogbr -i terser libs/*.js
+...
+total: 3009345
+19,90s user 0,64s system 146% cpu 13,980 total
 
-real  0m7.444s
-user  0m11.281s
-sys   0m0.308s
-
-$ minified-size --minifier=babel libs/*.js
-
-real  0m20.084s
-user  0m27.961s
-sys   0m0.730s
+$ time minified-size -ogbr -i babel libs/*.js
+...
+total: 3025803
+46,88s user 1,53s system 133% cpu 36,186 total
 ```
 
 ## Contributing
@@ -234,6 +236,7 @@ Licensed under the MIT license.
 [options for gzip]: https://nodejs.org/docs/latest-v10.x/api/zlib.html#zlib_class_options
 [parameters for brotli]: https://nodejs.org/docs/latest-v10.x/api/zlib.html#zlib_compressor_options
 [babel-minify/619]: https://github.com/babel/minify/issues/619
+[swc]: https://swc.rs/docs/configuration/minification
 [esbuild]: https://github.com/evanw/esbuild#readme
 [terser]: https://github.com/terser/terser#readme
 [babel-minify]: https://github.com/babel/minify#readme

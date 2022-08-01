@@ -44,7 +44,11 @@ function checkError (test, script, results, parsing, end) {
   if (parsing) {
     test.ok(typeof reason === 'string')
     test.ok(reason.length <= message.length)
-    test.equal(line, 1)
+    if (line) {
+      test.equal(line, 1)
+    } else {
+      test.equal(line, undefined)
+    }
     if (column) {
       test.equal(column, 10)
     } else {
@@ -129,6 +133,12 @@ test.test('supports string input', async test => {
   checkSuccess(test, 'source1', results, true, true)
 })
 
+test.test('reports source parsing error with swc', async test => {
+  const script = 'function () { console.log("OK") }'
+  const results = await minifiedSize({ sources: [script], minifier: 'swc' })
+  checkError(test, 'source1', results, true, true)
+})
+
 test.test('reports source parsing error with esbuild', async test => {
   const script = 'function () { console.log("OK") }'
   const results = await minifiedSize({ sources: [script], minifier: 'esbuild' })
@@ -171,6 +181,12 @@ test.test('reports invalid brotli options', async test => {
   checkError(test, 'source1', results, false, false)
 })
 
+test.test('supports swc as minifier', async test => {
+  const script = 'function test () { console.log("OK") }'
+  const results = await minifiedSize({ sources: [script], minifier: 'swc', gzip: false, brotli: false })
+  checkSuccess(test, 'source1', results, false, false)
+})
+
 test.test('supports esbuild as minifier', async test => {
   const script = 'function test () { console.log("OK") }'
   const results = await minifiedSize({ sources: [script], minifier: 'esbuild', gzip: false, brotli: false })
@@ -211,6 +227,14 @@ test.test('minifier recognizes Unicode line breaks as whitespace', async test =>
   const script = 'test/module.txt'
   const results = await minifiedSize({ files: [script] })
   checkSuccess(test, script, results, true, true)
+})
+
+test.test('swc does not escape Unicode characters', async test => {
+  const script = 'message = "䅬朤堾..."'
+  const results = await minifiedSize({ sources: [script], minifier: 'swc' })
+  checkSuccess(test, 'source1', results, true, true, false)
+  const { originalSize, minifiedSize: smallerSize } = results[0]
+  test.ok(originalSize >= smallerSize)
 })
 
 test.test('esbuild does not escape Unicode characters', async test => {
