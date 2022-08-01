@@ -84,11 +84,11 @@ test.test('checks input parameters', async test => {
   try {
     await minifiedSize()
     test.ok(false)
-  } catch (error) {
+  } catch {
     try {
       await minifiedSize({})
       test.ok(false)
-    } catch (error) {
+    } catch {
       test.ok(true)
     }
   }
@@ -315,7 +315,7 @@ test.test('works as a generator too', async test => {
   test.end()
 })
 
-test.test('computes total sizes from successful results', async test => {
+test.test('computes total sizes from successful results', test => {
   const total = computeTotalSizes([
     { originalSize: 3, minifiedSize: 2, gzippedSize: 1, brotliedSize: 4 },
     { error: {} },
@@ -327,7 +327,7 @@ test.test('computes total sizes from successful results', async test => {
   test.end()
 })
 
-test.test('computes total sizes without gzipped and brotlied sizes', async test => {
+test.test('computes total sizes without gzipped and brotlied sizes', test => {
   const total = computeTotalSizes([
     { originalSize: 3, minifiedSize: 2 },
     { originalSize: 30, minifiedSize: 20 }
