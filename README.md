@@ -32,7 +32,7 @@ Print the original, expected minified, gzipped and brotlied sizes of a sample fi
 
 ```text
 $ minified-size lib/index.js
-lib/index.js: 10.4 kB, 5.97 kB, 2.17 kB, 1.91 kB
+lib/index.js: 10.8 kB, 5.09 kB, 2.12 kB, 1.86 kB
 ```
 
 Running `minified-size` without any parameters will print usage instructions:
@@ -93,10 +93,10 @@ Get the original, expected minified, gzipped and brotlied sizes (in bytes) of a 
 const { getMinifiedSizes } = require('minified-size')
 const results = await getMinifiedSizes({ files: [ 'lib/index.js' ] })
 // [ { file: 'lib/index.js',
-//     originalSize: 10374,
-//     minifiedSize: 5974,
-//     gzippedSize: 2167,
-//     brotliedSize: 1905 } ]
+//     originalSize: 10788,
+//     minifiedSize: 5087,
+//     gzippedSize: 2122,
+//     brotliedSize: 1861 } ]
 ```
 
 If you process a lot of files, you can use an asynchronous generator, which yields results one-by-one to get them earlier, instead of returning an array with all of them together:
