@@ -1,3 +1,24 @@
+# [3.0.0](https://github.com/prantlf/minified-size/compare/v2.3.1...v3.0.0) (2022-08-01)
+
+
+### Bug Fixes
+
+* Upgrade deps, pin pretty-bytes, replace chalk with colorette ([4fba183](https://github.com/prantlf/minified-size/commit/4fba18369271e6288417b3dfa73d2eea22ab0296))
+
+
+### Features
+
+* Minify with swc by default ([b3a2336](https://github.com/prantlf/minified-size/commit/b3a2336cea11098f53f090578a9298e4c78178ab))
+
+
+### BREAKING CHANGES
+
+* Although the output of this tool did not change,
+swc may have different behaviour than esbuild. The effect should
+be better compression, but if this tool starts failing, you can
+file a bugu about it and force esbuild or other minifier
+as a temporary workaround.
+
 # Changes
 
 ## 2.3.1
