@@ -229,7 +229,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## License
 
-Copyright (c) 2018-2022 Ferdinand Prantl
+Copyright (c) 2018-2023 Ferdinand Prantl
 
 Licensed under the MIT license.
 
