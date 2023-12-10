@@ -18,6 +18,7 @@ commander.version(pkg.version)
   .option('-m, --no-minified-size', 'prevents printing the size of the minified code')
   .option('-g, --no-gzipped-size', 'prevents printing the size of the gzipped code')
   .option('-b, --no-brotlied-size', 'prevents printing the size of the brotlied code')
+  .option('-s, --source-type [type]', 'sets JavaScript source type (module or script)')
   .option('-t, --no-total', 'prevents printing the total sizes')
   .option('-i, --minifier [minifier]', 'chooses the JavaScript minifier', 'swc')
 
@@ -52,7 +53,7 @@ if (!files.length) {
 const {
   language, json, total: printTotal, rawSizes, originalSize: printOriginalSize,
   minifiedSize: printMinifiedSize, gzippedSize: printGzippedSize,
-  brotliedSize: printBrotliedSize, minifier
+  brotliedSize: printBrotliedSize, minifier, sourceType
 } = commander.opts()
 
 function printError (file, { message, line, column }) {
@@ -109,7 +110,8 @@ function printResult ({ error, file, originalSize, minifiedSize, gzippedSize, br
       streams,
       gzip: printGzippedSize,
       brotli: printBrotliedSize,
-      minifier
+      minifier,
+      sourceType
     })
     if (printTotal && results.length > 1) {
       results.push(computeTotalSizes(results))
