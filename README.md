@@ -50,6 +50,7 @@ Options:
 -m, --no-minified-size     prevents printing the size of the minified code
 -g, --no-gzipped-size      prevents printing the size of the gzipped code
 -b, --no-brotlied-size     prevents printing the size of the brotlied code
+-s, --source-type [type]   sets JavaScript source type (module or script)
 -t, --no-total             prevents printing the total sizes
 -i, --minifier [minifier]  chooses the JavaScript minifier (default: "swc")
 -h, --help                 display help for command
@@ -79,7 +80,7 @@ test/invalid.js(1,7): unknown: Unexpected token, expected ";"
 
 ## Programmatic Usage
 
-Make sure that you use [Node.js] >= 10. Install the `minified-size` package locally by your favourite package manager:
+Make sure that you use [Node.js] >= 16. Install the `minified-size` package locally by your favourite package manager:
 
 ```bash
 npm i minified-size
@@ -196,30 +197,30 @@ Other minifiers ([swc], [esbuild] and [terser]) do not suffer from this issue. (
 
 ## Performance
 
-The JavaScript minifier affects the performance the most. The most efficient one that supports all JavaScript inputs is [swc], which is used by default. Other minifiers ([esbuild], [terser] and [babel-minify]) can be chosen as a workaround by the `minifier` option, if the default minifier cannot process some source, or just to compare the results of the minifiers.
+The JavaScript minifier affects the performance the most. The most efficient one is [swc], but because it cannot minify both modules and scripts using the same options, [esbuild] is used by default. Other minifiers ([esbuild], [swc], [terser] and [babel-minify]) can be chosen as a workaround by the `minifier` option, if the default minifier cannot process some source, or just to compare the results of the minifiers.
 
-An example of measuring a cocktail of 6.5 MB in 65 JavaScript libraries (Require, Underscore, jQuery, Backbone, Backbone.Radio, Handlebars, Marionette, Moment, Moment-Timezone, Ally, Hammer, Less etc.) shows the huge difference between the minifiers:
+An example of measuring a cocktail of 6.6 MB in 69 JavaScript libraries (Require, Underscore, jQuery, Backbone, Backbone.Radio, Handlebars, Marionette, Moment, Moment-Timezone, Ally, Hammer, Less etc.) shows the huge difference between the minifiers:
 
 ```text
 $ time minified-size -ogbr -i swc libs/*.js
 ...
-total: 3009049
-2,68s user 0,29s system 126% cpu 2,354 total
+total: 2924862
+2.12s user 0.40s system 134% cpu 1.868 total
 
 $ time minified-size -ogbr -i esbuild libs/*.js
 ...
-total: 3019802
-1,13s user 0,25s system 127% cpu 1,085 total
+total: 2961126
+1.02s user 0.25s system 125% cpu 1.012 total
 
 $ time minified-size -ogbr -i terser libs/*.js
 ...
-total: 3009345
-19,90s user 0,64s system 146% cpu 13,980 total
+total: 2953313
+15.07s user 0.42s system 167% cpu 9.273 total
 
 $ time minified-size -ogbr -i babel libs/*.js
 ...
-total: 3025803
-46,88s user 1,53s system 133% cpu 36,186 total
+total: 2966286
+32.77s user 1.14s system 143% cpu 23.651 total
 ```
 
 ## Contributing
