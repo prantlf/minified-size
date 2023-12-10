@@ -1,3 +1,16 @@
+# [3.1.0](https://github.com/prantlf/minified-size/compare/v3.0.0...v3.1.0) (2023-12-10)
+
+
+### Bug Fixes
+
+* Prefer esbuild to swc ([adffc55](https://github.com/prantlf/minified-size/commit/adffc551881e511f774388820439e5b0a9e4ede2))
+* Upgrade dependencies ([0248e5f](https://github.com/prantlf/minified-size/commit/0248e5f270c48d93aeea6b16bd8f3d8486d0f8a6))
+
+
+### Features
+
+* Allow setting the source type for swc ([7ef2608](https://github.com/prantlf/minified-size/commit/7ef2608e52022e1a33fc749480fc88d09c7ee666))
+
 # [3.0.0](https://github.com/prantlf/minified-size/compare/v2.3.1...v3.0.0) (2022-08-01)
 
 
