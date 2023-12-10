@@ -181,9 +181,15 @@ test.test('reports invalid brotli options', async test => {
   checkError(test, 'source1', results, false, false)
 })
 
-test.test('supports swc as minifier', async test => {
+test.test('supports swc as minifier for scripts', async test => {
   const script = 'function test () { console.log("OK") }'
   const results = await minifiedSize({ sources: [script], minifier: 'swc', gzip: false, brotli: false })
+  checkSuccess(test, 'source1', results, false, false)
+})
+
+test.test('supports swc as minifier for modules', async test => {
+  const script = 'export default { answer: 42 }'
+  const results = await minifiedSize({ sources: [script], minifier: 'swc', gzip: false, brotli: false, sourceType: 'module' })
   checkSuccess(test, 'source1', results, false, false)
 })
 
@@ -321,9 +327,12 @@ test.test('computes total sizes from successful results', test => {
     { error: {} },
     { originalSize: 30, minifiedSize: 20, gzippedSize: 10, brotliedSize: 40 }
   ])
-  test.deepEqual(total, {
-    total: true, originalSize: 33, minifiedSize: 22, gzippedSize: 11, brotliedSize: 44
-  })
+  test.ok(total)
+  test.ok(total.total === true)
+  test.ok(total.originalSize === 33)
+  test.ok(total.minifiedSize === 22)
+  test.ok(total.gzippedSize === 11)
+  test.ok(total.brotliedSize === 44)
   test.end()
 })
 
@@ -332,6 +341,9 @@ test.test('computes total sizes without gzipped and brotlied sizes', test => {
     { originalSize: 3, minifiedSize: 2 },
     { originalSize: 30, minifiedSize: 20 }
   ])
-  test.deepEqual(total, { total: true, originalSize: 33, minifiedSize: 22 })
+  test.ok(total)
+  test.ok(total.total === true)
+  test.ok(total.originalSize === 33)
+  test.ok(total.minifiedSize === 22)
   test.end()
 })

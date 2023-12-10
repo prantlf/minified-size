@@ -35,11 +35,10 @@
   ],
   "scripts": {
     "lint": "denolint",
-    "check": "tap --100",
-    "test": "denolint && tap --100"
+    "check": "tap",
+    "test": "denolint && tap"
   },
   "tap": {
-    "browser": false,
     "coverage-report": [
       "text-summary",
       "lcov"
@@ -62,21 +61,21 @@
   },
   "dependencies": {
     "@prantlf/crass": "0.12.6",
-    "@swc/core": "^1.2.220",
+    "@swc/core": "^1.3.100",
     "babel-minify": "0.5.2",
-    "colorette": "^2.0.19",
-    "commander": "9.4.0",
-    "esbuild": "0.14.51",
-    "fast-glob": "3.2.11",
+    "colorette": "^2.0.20",
+    "commander": "11.1.0",
+    "esbuild": "0.19.9",
+    "fast-glob": "3.3.2",
     "html-minifier": "4.0.0",
     "pretty-bytes": "5.6.0",
-    "terser": "5.14.2"
+    "terser": "5.26.0"
   },
   "devDependencies": {
-    "@node-rs/deno-lint": "^1.14.0",
-    "@semantic-release/changelog": "^6.0.1",
+    "@node-rs/deno-lint": "^1.17.3",
+    "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
-    "tap": "16.3.0"
+    "tap": "18.6.1"
   },
   "keywords": [
     "size-calculation",

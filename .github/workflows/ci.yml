@@ -25,6 +25,8 @@ jobs:
       run: npm test
     - name: Coverage
       uses: codecov/codecov-action@v2
+      with:
+        files: .tap/report/lcov.info
     - name: Publish
       uses: cycjimmy/semantic-release-action@v2
       with:
