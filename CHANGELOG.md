@@ -3,11 +3,11 @@
 ## Features
 
 * Upgrade dependencies ([fbe2276](https://github.com/prantlf/minified-size/commit/fbe22760367530e890fd25c18f5e7ecacbd0bfa1))
-* Use esbuild minified by default ([93628d5](https://github.com/prantlf/minified-size/commit/93628d54258926cba29756a3e24133439271119f))
+* Use esbuild minifier by default ([93628d5](https://github.com/prantlf/minified-size/commit/93628d54258926cba29756a3e24133439271119f))
 
 ## Bug Fixes
 
-* Pass the JS source type property in non-JSON mode ([c4d98bc](https://github.com/prantlf/minified-size/commit/c4d98bcac7a56483d6c339258f04f4038f8dbbf2))
+* Pass the JS source type properly in non-JSON mode ([c4d98bc](https://github.com/prantlf/minified-size/commit/c4d98bcac7a56483d6c339258f04f4038f8dbbf2))
 
 ## BREAKING CHANGES
 
