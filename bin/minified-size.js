@@ -102,29 +102,23 @@ function printResult ({ error, file, originalSize, minifiedSize, gzippedSize, br
 }
 
 (async () => {
+  const options = {
+    language,
+    files,
+    streams,
+    gzip: printGzippedSize,
+    brotli: printBrotliedSize,
+    minifier,
+    sourceType
+  }
   if (json) {
-    const results = await getMinifiedSizes({
-      language,
-      files,
-      streams,
-      gzip: printGzippedSize,
-      brotli: printBrotliedSize,
-      minifier,
-      sourceType
-    })
+    const results = await getMinifiedSizes(options)
     if (printTotal && results.length > 1) {
       results.push(computeTotalSizes(results))
     }
     console.log(JSON.stringify(results, undefined, 2))
   } else {
-    const generator = generateMinifiedSizes({
-      language,
-      files,
-      streams,
-      gzip: printGzippedSize,
-      brotli: printBrotliedSize,
-      minifier
-    })
+    const generator = generateMinifiedSizes(options)
     for (const results = []; ;) {
       const result = await generator.next()
       if (result.done) {
