@@ -19,7 +19,7 @@ program
   .option('-b, --no-brotlied-size', 'prevents printing the size of the brotlied code')
   .option('-s, --source-type <type>', 'sets JavaScript source type (module or script)')
   .option('-t, --no-total', 'prevents printing the total sizes')
-  .option('-i, --minifier <minifier>', 'chooses the JavaScript minifier', 'swc')
+  .option('-i, --minifier <minifier>', 'chooses the JavaScript minifier', 'esbuild')
   .argument('<file...>')
   .on('--help', () => {
     console.log()
@@ -28,7 +28,7 @@ program
     console.log('  Stylesheets are recognized by the extension ".css", or they can be forced')
     console.log('  by the language "css" on the command line. Web pages are recognized by the')
     console.log('  extension ".htm[l]", or they can be forced by the language "html".')
-    console.log('  The JavaScript minifier can be "swc", "esbuild", "terser" or "babel".')
+    console.log('  The JavaScript minifier can be "esbuild", "swc", "terser" or "babel".')
     console.log()
     console.log('  Examples:')
     console.log()
