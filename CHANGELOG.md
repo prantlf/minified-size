@@ -1,3 +1,24 @@
+# [4.0.0](https://github.com/prantlf/minified-size/compare/v3.1.0...v4.0.0) (2025-04-26)
+
+## Features
+
+* Upgrade dependencies ([fbe2276](https://github.com/prantlf/minified-size/commit/fbe22760367530e890fd25c18f5e7ecacbd0bfa1))
+* Use esbuild minified by default ([93628d5](https://github.com/prantlf/minified-size/commit/93628d54258926cba29756a3e24133439271119f))
+
+## Bug Fixes
+
+* Pass the JS source type property in non-JSON mode ([c4d98bc](https://github.com/prantlf/minified-size/commit/c4d98bcac7a56483d6c339258f04f4038f8dbbf2))
+
+## BREAKING CHANGES
+
+The default minifier is esbuild now. It will probably
+break no real-world use case. Nevertheless, the reported minified
+changes with the default parameters might change.
+
+The minimum supported version of Node.js is 14.13 from
+now on. It will probably not break anything, because this version is
+very old.
+
 # [3.1.0](https://github.com/prantlf/minified-size/compare/v3.0.0...v3.1.0) (2023-12-10)
 
 
