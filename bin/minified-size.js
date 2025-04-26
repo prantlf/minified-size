@@ -1,52 +1,51 @@
 #!/usr/bin/env node
 
-'use strict'
-
-const commander = require('commander')
+const { program } = require('commander')
 const { getMinifiedSizes, generateMinifiedSizes, computeTotalSizes } = require('..')
 const prettyBytes = require('pretty-bytes')
 const { magenta, red } = require('colorette')
 const pkg = require('../package.json')
 
-commander.version(pkg.version)
+program
+  .version(pkg.version)
   .description(pkg.description)
   .usage('[options] <file>, ... | --')
-  .option('-l, --language [name]', 'specifies the input language', 'js')
+  .option('-l, --language <name>', 'specifies the input language', 'js')
   .option('-j, --json', 'print results in the JSON format')
   .option('-r, --raw-sizes', 'print sizes in bytes as integers')
   .option('-o, --no-original-size', 'prevents printing the size of the original code')
   .option('-m, --no-minified-size', 'prevents printing the size of the minified code')
   .option('-g, --no-gzipped-size', 'prevents printing the size of the gzipped code')
   .option('-b, --no-brotlied-size', 'prevents printing the size of the brotlied code')
-  .option('-s, --source-type [type]', 'sets JavaScript source type (module or script)')
+  .option('-s, --source-type <type>', 'sets JavaScript source type (module or script)')
   .option('-t, --no-total', 'prevents printing the total sizes')
-  .option('-i, --minifier [minifier]', 'chooses the JavaScript minifier', 'swc')
-
-commander.on('--help', () => {
-  console.log()
-  console.log('  All four sizes are estimated by default. File paths may contain wildcards.')
-  console.log('  If "--" is entered instead of files, the standard input will be read.')
-  console.log('  Stylesheets are recognized by the extension ".css", or they can be forced')
-  console.log('  by the language "css" on the command line. Web pages are recognized by the')
-  console.log('  extension ".htm[l]", or they can be forced by the language "html".')
-  console.log('  The JavaScript minifier can be "swc", "esbuild", "terser" or "babel".')
-  console.log()
-  console.log('  Examples:')
-  console.log()
-  console.log('    $ minified-size lib/index.js')
-  console.log('    $ minified-size --json assets/*.css')
-  console.log('    $ cat public/index.html | minified-size --language=html --')
-})
+  .option('-i, --minifier <minifier>', 'chooses the JavaScript minifier', 'swc')
+  .argument('<file...>')
+  .on('--help', () => {
+    console.log()
+    console.log('  All four sizes are estimated by default. File paths may contain wildcards.')
+    console.log('  If "--" is entered instead of files, the standard input will be read.')
+    console.log('  Stylesheets are recognized by the extension ".css", or they can be forced')
+    console.log('  by the language "css" on the command line. Web pages are recognized by the')
+    console.log('  extension ".htm[l]", or they can be forced by the language "html".')
+    console.log('  The JavaScript minifier can be "swc", "esbuild", "terser" or "babel".')
+    console.log()
+    console.log('  Examples:')
+    console.log()
+    console.log('    $ minified-size lib/index.js')
+    console.log('    $ minified-size --json assets/*.css')
+    console.log('    $ cat public/index.html | minified-size --language=html --')
+  })
 
 const args = process.argv
-commander.parse(args)
-const files = commander.args
+program.parse(args)
+const files = program.args
 let streams
 if (!files.length) {
   if (args[args.length - 1] === '--') {
     streams = [process.stdin]
   } else {
-    commander.help()
+    program.help()
   }
 }
 
@@ -54,7 +53,7 @@ const {
   language, json, total: printTotal, rawSizes, originalSize: printOriginalSize,
   minifiedSize: printMinifiedSize, gzippedSize: printGzippedSize,
   brotliedSize: printBrotliedSize, minifier, sourceType
-} = commander.opts()
+} = program.opts()
 
 function printError (file, { message, line, column }) {
   let prefix = file

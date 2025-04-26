@@ -187,7 +187,7 @@ Look for an option, that will make your minifier retain the Unicode literals unc
 ```js
 function replaceEscapedUnicodeCharacters (source) {
   return source.replace(/\\u([\w]{4})/gi, (match, code) =>
-    String.fromCharCode(parseInt(code, 16)))
+    String.fromCharCode(Number.parseInt(code, 16)))
 }
 ```
 

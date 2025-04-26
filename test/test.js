@@ -1,12 +1,10 @@
-'use strict'
-
 const minifiedSize = require('..')
 const getMinifiedSizes = minifiedSize.getMinifiedSizes
 const generateMinifiedSizes = minifiedSize.generateMinifiedSizes
 const computeTotalSizes = minifiedSize.computeTotalSizes
-const { constants: zlib } = require('zlib')
-const { Readable } = require('stream')
-const { join, normalize } = require('path')
+const { constants: zlib } = require('node:zlib')
+const { Readable } = require('node:stream')
+const { join, normalize } = require('node:path')
 const test = require('tap')
 
 function checkSuccess (test, script, results, gzip, brotli, end) {
@@ -20,9 +18,9 @@ function checkSuccess (test, script, results, gzip, brotli, end) {
   test.equal(file, script)
   test.ok(typeof originalSize === 'number')
   test.ok(typeof minifiedSize === 'number')
-  // eslint-disable-next-line valid-typeof
+  // biome-ignore lint/suspicious/useValidTypeof: it is not invalid
   test.ok(typeof gzippedSize === (gzip ? 'number' : 'undefined'))
-  // eslint-disable-next-line valid-typeof
+  // biome-ignore lint/suspicious/useValidTypeof: it is not invalid
   test.ok(typeof brotliedSize === (brotli ? 'number' : 'undefined'))
   if (end !== false) {
     test.end()
@@ -171,7 +169,7 @@ test.test('allows to disable brotlied size estimation', async test => {
 
 test.test('reports invalid gzip options', async test => {
   const script = 'function test () { console.log("OK") }'
-  const results = await minifiedSize({ sources: [script], gzip: { level: Infinity }, brotli: false })
+  const results = await minifiedSize({ sources: [script], gzip: { level: Number.POSITIVE_INFINITY }, brotli: false })
   checkError(test, 'source1', results, false, false)
 })
 
