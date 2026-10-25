@@ -4,11 +4,13 @@
     "**/.git": true,
     "**/.DS_Store": true,
     ".tap/coverage": true,
+    "lib/index.cjs.map": true,
     "node_modules": true,
     "npm-debug.log": true
   },
   "search.exclude": {
     "**/node_modules": true,
-    "**/pnpm-lock.yaml": true
+    "**/pnpm-lock.yaml": true,
+    "lib/index.cjs": true
   }
 }

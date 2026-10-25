@@ -1,13 +1,12 @@
-const minifiedSize = require('..')
-const getMinifiedSizes = minifiedSize.getMinifiedSizes
-const generateMinifiedSizes = minifiedSize.generateMinifiedSizes
-const computeTotalSizes = minifiedSize.computeTotalSizes
-const { constants: zlib } = require('node:zlib')
-const { Readable } = require('node:stream')
-const { join, normalize } = require('node:path')
-const test = require('tap')
+import { join, normalize } from 'node:path'
+import { Readable } from 'node:stream'
+import { constants as zlib } from 'node:zlib'
+import test from 'tap'
+import { getMinifiedSizes, generateMinifiedSizes, computeTotalSizes } from '../lib/index.js'
 
-function checkSuccess (test, script, results, gzip, brotli, end) {
+const __dirname = import.meta.dirname
+
+function checkSuccess(test, script, results, gzip, brotli, end) {
   test.ok(Array.isArray(results))
   test.equal(results.length, 1)
   const result = results[0]
@@ -27,7 +26,7 @@ function checkSuccess (test, script, results, gzip, brotli, end) {
   }
 }
 
-function checkError (test, script, results, parsing, end) {
+function checkError(test, script, results, parsing, end) {
   test.ok(Array.isArray(results))
   test.equal(results.length, 1)
   const result = results[0]
@@ -58,9 +57,9 @@ function checkError (test, script, results, parsing, end) {
   }
 }
 
-function createStream (content) {
+function createStream(content) {
   return new Readable({
-    read () {
+    read() {
       if (!content) {
         this.emit('error', new Error('Nothing to read.'))
       } else {
@@ -72,7 +71,6 @@ function createStream (content) {
 }
 
 test.test('exports normal functions and a generator', test => {
-  test.ok(typeof minifiedSize === 'function')
   test.ok(typeof getMinifiedSizes === 'function')
   test.ok(typeof generateMinifiedSizes === 'function')
   test.end()
@@ -80,11 +78,11 @@ test.test('exports normal functions and a generator', test => {
 
 test.test('checks input parameters', async test => {
   try {
-    await minifiedSize()
+    await getMinifiedSizes()
     test.ok(false)
   } catch {
     try {
-      await minifiedSize({})
+      await getMinifiedSizes({})
       test.ok(false)
     } catch {
       test.ok(true)
@@ -95,147 +93,187 @@ test.test('checks input parameters', async test => {
 
 test.test('supports file input', async test => {
   const script = 'lib/index.js'
-  const results = await minifiedSize({ files: [script] })
+  const results = await getMinifiedSizes({ files: [script] })
   checkSuccess(test, script, results, true, true)
 })
 
 test.test('supports file input with a relative path and wildcards', async test => {
   const scripts = 'lib/*.js'
   const script = 'lib/index.js'
-  const results = await minifiedSize({ files: [scripts] })
+  const results = await getMinifiedSizes({ files: [scripts] })
   checkSuccess(test, script, results, true, true)
 })
 
 test.test('supports file input with an absolute path and wildcards', async test => {
   const scripts = join(__dirname, '../lib/*.js')
   const script = join(__dirname, '../lib/index.js')
-  const results = await minifiedSize({ files: [scripts] })
+  const results = await getMinifiedSizes({ files: [scripts] })
   checkSuccess(test, script, results, true, true)
 })
 
 test.test('reports directory listing error', async test => {
   const script = 'missing/*.js'
-  const results = await minifiedSize({ files: [script] })
+  const results = await getMinifiedSizes({ files: [script] })
   checkError(test, script, results, false)
 })
 
 test.test('reports file reading error', async test => {
   const script = 'lib/missing.js'
-  const results = await minifiedSize({ files: [script] })
+  const results = await getMinifiedSizes({ files: [script] })
   checkError(test, script, results, false)
 })
 
 test.test('supports string input', async test => {
   const script = 'function test () { console.log("OK") }'
-  const results = await minifiedSize({ sources: [script] })
+  const results = await getMinifiedSizes({ sources: [script] })
   checkSuccess(test, 'source1', results, true, true)
+})
+
+test.test('reports source parsing error with oxc', async test => {
+  const script = 'function () { console.log("OK")'
+  const results = await getMinifiedSizes({ sources: [script], minifier: 'oxc' })
+  checkError(test, 'source1', results, false, true)
 })
 
 test.test('reports source parsing error with swc', async test => {
   const script = 'function () { console.log("OK") }'
-  const results = await minifiedSize({ sources: [script], minifier: 'swc' })
+  const results = await getMinifiedSizes({ sources: [script], minifier: 'swc' })
   checkError(test, 'source1', results, true, true)
 })
 
 test.test('reports source parsing error with esbuild', async test => {
   const script = 'function () { console.log("OK") }'
-  const results = await minifiedSize({ sources: [script], minifier: 'esbuild' })
+  const results = await getMinifiedSizes({ sources: [script], minifier: 'esbuild' })
   checkError(test, 'source1', results, true, true)
 })
 
 test.test('reports source parsing error with terser', async test => {
   const script = 'function () { console.log("OK") }'
-  const results = await minifiedSize({ sources: [script], minifier: 'terser' })
+  const results = await getMinifiedSizes({ sources: [script], minifier: 'terser' })
   checkError(test, 'source1', results, true, true)
 })
 
 test.test('reports source parsing error with babel', async test => {
   const script = 'function () { console.log("OK") }'
-  const results = await minifiedSize({ sources: [script], minifier: 'babel' })
+  const results = await getMinifiedSizes({ sources: [script], minifier: 'babel' })
   checkError(test, 'source1', results, true, true)
 })
 
 test.test('allows to disable gzipped size estimation', async test => {
   const script = 'function test () { console.log("OK") }'
-  const results = await minifiedSize({ sources: [script], gzip: false })
+  const results = await getMinifiedSizes({ sources: [script], gzip: false })
   checkSuccess(test, 'source1', results, false, true)
 })
 
 test.test('allows to disable brotlied size estimation', async test => {
   const script = 'function test () { console.log("OK") }'
-  const results = await minifiedSize({ sources: [script], brotli: false })
+  const results = await getMinifiedSizes({ sources: [script], brotli: false })
   checkSuccess(test, 'source1', results, true, false)
 })
 
 test.test('reports invalid gzip options', async test => {
   const script = 'function test () { console.log("OK") }'
-  const results = await minifiedSize({ sources: [script], gzip: { level: Number.POSITIVE_INFINITY }, brotli: false })
+  const results = await getMinifiedSizes({
+    sources: [script],
+    gzip: { level: Number.POSITIVE_INFINITY },
+    brotli: false
+  })
   checkError(test, 'source1', results, false, false)
 })
 
 test.test('reports invalid brotli options', async test => {
   const script = 'function test () { console.log("OK") }'
-  const results = await minifiedSize({ sources: [script], gzip: false, brotli: { [zlib.BROTLI_PARAM_QUALITY]: 'dummy' } })
+  const results = await getMinifiedSizes({
+    sources: [script],
+    gzip: false,
+    brotli: { [zlib.BROTLI_PARAM_QUALITY]: 'dummy' }
+  })
   checkError(test, 'source1', results, false, false)
 })
 
 test.test('supports swc as minifier for scripts', async test => {
   const script = 'function test () { console.log("OK") }'
-  const results = await minifiedSize({ sources: [script], minifier: 'swc', gzip: false, brotli: false })
+  const results = await getMinifiedSizes({
+    sources: [script],
+    minifier: 'swc',
+    gzip: false,
+    brotli: false
+  })
   checkSuccess(test, 'source1', results, false, false)
 })
 
 test.test('supports swc as minifier for modules', async test => {
   const script = 'export default { answer: 42 }'
-  const results = await minifiedSize({ sources: [script], minifier: 'swc', gzip: false, brotli: false, sourceType: 'module' })
+  const results = await getMinifiedSizes({
+    sources: [script],
+    minifier: 'swc',
+    gzip: false,
+    brotli: false,
+    sourceType: 'module'
+  })
   checkSuccess(test, 'source1', results, false, false)
 })
 
 test.test('supports esbuild as minifier', async test => {
   const script = 'function test () { console.log("OK") }'
-  const results = await minifiedSize({ sources: [script], minifier: 'esbuild', gzip: false, brotli: false })
+  const results = await getMinifiedSizes({
+    sources: [script],
+    minifier: 'esbuild',
+    gzip: false,
+    brotli: false
+  })
   checkSuccess(test, 'source1', results, false, false)
 })
 
 test.test('supports terser as minifier', async test => {
   const script = 'function test () { console.log("OK") }'
-  const results = await minifiedSize({ sources: [script], minifier: 'terser', gzip: false, brotli: false })
+  const results = await getMinifiedSizes({
+    sources: [script],
+    minifier: 'terser',
+    gzip: false,
+    brotli: false
+  })
   checkSuccess(test, 'source1', results, false, false)
 })
 
 test.test('supports babel as minifier', async test => {
   const script = 'function test () { console.log("OK") }'
-  const results = await minifiedSize({ sources: [script], minifier: 'babel', gzip: false, brotli: false })
+  const results = await getMinifiedSizes({
+    sources: [script],
+    minifier: 'babel',
+    gzip: false,
+    brotli: false
+  })
   checkSuccess(test, 'source1', results, false, false)
 })
 
 test.test('reports an invalid minifier', async test => {
   const script = 'function test () { console.log("OK") }'
-  const results = await minifiedSize({ sources: [script], minifier: 'invalid' })
+  const results = await getMinifiedSizes({ sources: [script], minifier: 'invalid' })
   checkError(test, 'source1', results, false, false)
 })
 
 test.test('supports stream input', async test => {
   const stream = createStream('function test () { console.log("OK") }')
-  const results = await minifiedSize({ streams: [stream] })
+  const results = await getMinifiedSizes({ streams: [stream] })
   checkSuccess(test, 'stream1', results, true, true)
 })
 
 test.test('reports stream reading error', async test => {
   const stream = createStream()
-  const results = await minifiedSize({ streams: [stream] })
+  const results = await getMinifiedSizes({ streams: [stream] })
   checkError(test, 'stream1', results, false, false)
 })
 
 test.test('minifier recognizes Unicode line breaks as whitespace', async test => {
   const script = 'test/module.txt'
-  const results = await minifiedSize({ files: [script] })
+  const results = await getMinifiedSizes({ files: [script] })
   checkSuccess(test, script, results, true, true)
 })
 
 test.test('swc does not escape Unicode characters', async test => {
   const script = 'message = "䅬朤堾..."'
-  const results = await minifiedSize({ sources: [script], minifier: 'swc' })
+  const results = await getMinifiedSizes({ sources: [script], minifier: 'swc' })
   checkSuccess(test, 'source1', results, true, true, false)
   const { originalSize, minifiedSize: smallerSize } = results[0]
   test.ok(originalSize >= smallerSize)
@@ -243,7 +281,7 @@ test.test('swc does not escape Unicode characters', async test => {
 
 test.test('esbuild does not escape Unicode characters', async test => {
   const script = 'message = "䅬朤堾..."'
-  const results = await minifiedSize({ sources: [script], minifier: 'esbuild' })
+  const results = await getMinifiedSizes({ sources: [script], minifier: 'esbuild' })
   checkSuccess(test, 'source1', results, true, true, false)
   const { originalSize, minifiedSize: smallerSize } = results[0]
   test.ok(originalSize >= smallerSize)
@@ -251,7 +289,7 @@ test.test('esbuild does not escape Unicode characters', async test => {
 
 test.test('terser does not escape Unicode characters', async test => {
   const script = 'message = "䅬朤堾..."'
-  const results = await minifiedSize({ sources: [script], minifier: 'terser' })
+  const results = await getMinifiedSizes({ sources: [script], minifier: 'terser' })
   checkSuccess(test, 'source1', results, true, true, false)
   const { originalSize, minifiedSize: smallerSize } = results[0]
   test.ok(originalSize >= smallerSize)
@@ -259,7 +297,7 @@ test.test('terser does not escape Unicode characters', async test => {
 
 test.test('babel does not escape Unicode characters', async test => {
   const script = 'message = "䅬朤堾..."'
-  const results = await minifiedSize({ sources: [script], minifier: 'babel' })
+  const results = await getMinifiedSizes({ sources: [script], minifier: 'babel' })
   checkSuccess(test, 'source1', results, true, true, false)
   const { originalSize, minifiedSize: smallerSize } = results[0]
   test.ok(originalSize >= smallerSize)
@@ -267,43 +305,43 @@ test.test('babel does not escape Unicode characters', async test => {
 
 test.test('recognizes a stylesheet by its file extension', async test => {
   const stylesheet = 'test/stylesheet.css'
-  const results = await minifiedSize({ files: [stylesheet] })
+  const results = await getMinifiedSizes({ files: [stylesheet] })
   checkSuccess(test, stylesheet, results, true, true)
 })
 
 test.test('forces the stylesheet-mode by a parameter', async test => {
   const stylesheet = '.button { padding: 1em }'
-  const results = await minifiedSize({ language: 'css', sources: [stylesheet] })
+  const results = await getMinifiedSizes({ language: 'css', sources: [stylesheet] })
   checkSuccess(test, 'source1', results, true, true)
 })
 
 test.test('reports stylesheet parsing error', async test => {
   const script = '.button padding: 1em'
-  const results = await minifiedSize({ language: 'css', sources: [script] })
+  const results = await getMinifiedSizes({ language: 'css', sources: [script] })
   checkError(test, 'source1', results, true, true)
 })
 
 test.test('reports minification error if an empty output is returned', async test => {
   const script = '.button { padding: }'
-  const results = await minifiedSize({ language: 'css', sources: [script] })
+  const results = await getMinifiedSizes({ language: 'css', sources: [script] })
   checkError(test, 'source1', results, false, false)
 })
 
 test.test('recognizes a web page by its file extension', async test => {
   const page = 'test/page.html'
-  const results = await minifiedSize({ files: [page] })
+  const results = await getMinifiedSizes({ files: [page] })
   checkSuccess(test, page, results, true, true)
 })
 
 test.test('forces the web-page-mode by a parameter', async test => {
   const page = '<html lang="en"></html>'
-  const results = await minifiedSize({ language: 'html', sources: [page] })
+  const results = await getMinifiedSizes({ language: 'html', sources: [page] })
   checkSuccess(test, 'source1', results, true, true)
 })
 
 test.test('reports web page parsing error', async test => {
   const page = '<html lang="en"'
-  const results = await minifiedSize({ language: 'html', sources: [page] })
+  const results = await getMinifiedSizes({ language: 'html', sources: [page] })
   checkError(test, 'source1', results, false, false)
 })
 

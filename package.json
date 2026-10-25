@@ -2,30 +2,37 @@
   "name": "minified-size",
   "version": "4.0.0",
   "description": "Estimates the size of minified and gzipped/brotlied JavaScript, CSS and HTML files.",
+  "keywords": [
+    "brotli",
+    "brotlied-files",
+    "css",
+    "estimate",
+    "files",
+    "gzip",
+    "gziped-files",
+    "html",
+    "javascript",
+    "js",
+    "minify",
+    "script",
+    "size",
+    "size-calculation",
+    "stylesheet"
+  ],
+  "homepage": "https://github.com/prantlf/minified-size#readme",
+  "bugs": {
+    "url": "https://github.com/prantlf/minified-size/issues"
+  },
+  "license": "MIT",
   "author": {
     "name": "Ferdinand Prantl",
     "email": "prantlf@gmail.com",
     "url": "http://prantl.tk"
   },
-  "license": "MIT",
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/prantlf/minified-size/blob/master/LICENSE"
-    }
-  ],
-  "homepage": "https://github.com/prantlf/minified-size#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/prantlf/minified-size.git"
   },
-  "bugs": {
-    "url": "https://github.com/prantlf/minified-size/issues"
-  },
-  "engines": {
-    "node": ">=14.13"
-  },
-  "main": "lib/index.js",
   "bin": {
     "minified-size": "./bin/minified-size.js"
   },
@@ -33,10 +40,41 @@
     "bin",
     "lib"
   ],
+  "type": "module",
+  "main": "lib/index.cjs",
+  "module": "lib/index.js",
+  "exports": {
+    ".": {
+      "require": "./lib/index.cjs",
+      "import": "./lib/index.js"
+    }
+  },
   "scripts": {
-    "lint": "biome lint bin lib test",
+    "build": "rollup -c",
+    "lint": "oxlint",
     "check": "tap --no-browser",
-    "test": "biome lint bin lib test && tap --no-browser"
+    "test": "oxlint && tap --no-browser"
+  },
+  "dependencies": {
+    "@prantlf/crass": "0.12.6",
+    "@prantlf/picocolors": "^1.6.0",
+    "@swc/core": "^1.16.20",
+    "babel-minify": "0.5.2",
+    "commander": "15.0.0",
+    "esbuild": "0.28.2",
+    "fast-glob": "3.3.3",
+    "html-minifier": "4.0.0",
+    "oxc-minify": "^0.155.0",
+    "pretty-bytes": "7.2.0",
+    "terser": "5.51.2"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^29.0.3",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "oxfmt": "^0.74.0",
+    "oxlint": "^1.89.0",
+    "rollup": "^4.65.0",
+    "tap": "^21.8.0"
   },
   "tap": {
     "coverage-report": [
@@ -44,37 +82,13 @@
       "lcov"
     ]
   },
-  "dependencies": {
-    "@prantlf/crass": "0.12.6",
-    "@swc/core": "^1.11.22",
-    "babel-minify": "0.5.2",
-    "colorette": "^2.0.20",
-    "commander": "13.1.0",
-    "esbuild": "0.25.3",
-    "fast-glob": "3.3.3",
-    "html-minifier": "4.0.0",
-    "pretty-bytes": "5.6.0",
-    "terser": "5.39.0"
+  "engines": {
+    "node": ">=22.18"
   },
-  "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
-    "tap": "^21.1.0"
-  },
-  "keywords": [
-    "size-calculation",
-    "gziped-files",
-    "brotlied-files",
-    "estimate",
-    "minify",
-    "gzip",
-    "brotli",
-    "script",
-    "javascript",
-    "js",
-    "stylesheet",
-    "css",
-    "html",
-    "files",
-    "size"
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/prantlf/minified-size/blob/master/LICENSE"
+    }
   ]
 }

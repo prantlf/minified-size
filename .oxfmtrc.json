@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "arrowParens": "avoid",
+  "semi": false,
+  "singleQuote": true,
+  "trailingComma": "none",
+  "sortImports": {
+    "newlinesBetween": false
+  },
+  "sortImports.newlinesBetween": false,
+  "ignorePatterns": ["CHANGELOG.md"]
+}

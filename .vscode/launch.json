@@ -6,9 +6,7 @@
       "request": "launch",
       "name": "bin",
       "program": "${workspaceRoot}/bin/minified-size",
-      "args": [
-        "test/*"
-      ],
+      "args": ["test/*"],
       "skipFiles": [
         "<node_internals>/**/*.js",
         "node_modules/async-hook-domain/index.js",

@@ -1,11 +1,4 @@
 # minified-size
-[![NPM version](https://badge.fury.io/js/minified-size.png)](http://badge.fury.io/js/minified-size)
-[![Build Status](https://github.com/prantlf/minified-size/workflows/Test/badge.svg)](https://github.com/prantlf/minified-size/actions)
-[![codecov](https://codecov.io/gh/prantlf/minified-size/branch/master/graph/badge.svg)](https://codecov.io/gh/prantlf/minified-size)
-[![Maintainability](https://api.codeclimate.com/v1/badges/8b145cbcf64c31ea8904/maintainability)](https://codeclimate.com/github/prantlf/minified-size/maintainability)
-[![Dependency Status](https://david-dm.org/prantlf/minified-size.svg)](https://david-dm.org/prantlf/minified-size)
-[![devDependency Status](https://david-dm.org/prantlf/minified-size/dev-status.svg)](https://david-dm.org/prantlf/minified-size#info=devDependencies)
-[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 Estimates the size of minified and gzipped/brotlied JavaScript, CSS and HTML files [very fast](#performance). Check, how much space will a particular source take in the minified output.
 
@@ -60,7 +53,7 @@ If "--" is entered instead of files, the standard input will be read.
 Stylesheets are recognized by the extension ".css", or they can be forced
 by the language "css" on the command line. Web pages are recognized by the
 extension ".htm[l]", or they can be forced by the language "html".
-The JavaScript minifier can be "swc", "esbuild", "terser" or "babel".
+The JavaScript minifier can be "oxc", "swc", "esbuild", "terser" or "babel".
 ```
 
 ### Errors
@@ -92,7 +85,7 @@ Get the original, expected minified, gzipped and brotlied sizes (in bytes) of a 
 
 ```javascript
 const { getMinifiedSizes } = require('minified-size')
-const results = await getMinifiedSizes({ files: [ 'lib/index.js' ] })
+const results = await getMinifiedSizes({ files: ['lib/index.js'] })
 // [ { file: 'lib/index.js',
 //     originalSize: 10788,
 //     minifiedSize: 5087,
@@ -105,16 +98,14 @@ If you process a lot of files, you can use an asynchronous generator, which yiel
 ```javascript
 const { generateMinifiedSizes } = require('minified-size')
 const resultGenerator = generateMinifiedSizes({
-  files: [ 'public/**/*.(js|css|html)' ]
+  files: ['public/**/*.(js|css|html)']
 })
 for (;;) {
   const result = await resultGenerator.next()
   if (result.done) {
     break
   }
-  const {
-    error, file, originalSize, minifiedSize, gzippedSize, brotliedSize
-  } = result.value
+  const { error, file, originalSize, minifiedSize, gzippedSize, brotliedSize } = result.value
   if (error) {
     console.info(`${file}: ${originalSize}, ${minifiedSize}, ${gzippedSize}, ${brotliedSize}`)
   } else {
@@ -127,7 +118,7 @@ You can compute total sizes from all file results:
 
 ```javascript
 const { getMinifiedSizes, computeTotalSizes } = require('minified-size')
-const results = await getMinifiedSizes({ files: [ 'foo.js', 'bar.js' ] })
+const results = await getMinifiedSizes({ files: ['foo.js', 'bar.js'] })
 const total = computeTotalSizes(results)
 // { total: true,
 //   originalSize: 89745,
@@ -138,22 +129,22 @@ const total = computeTotalSizes(results)
 
 ### Options
 
-* `language` - a string specifying the input language ("js", "css" or "html")
-* `files` - an array of strings with file paths to load and process
-* `streams` - an array of readable streams with source code to process
-* `sources` - an array of strings with source code to process
-* `gzip` - a boolean to disable estimating the gzipped output size, or an object with [options for gzip].
-* `brotli` - a boolean to disable estimating the brotlied output size, or an object with [parameters for brotli].
-* `minifier` - a string choosing the JavaScript minifier ("swc" - default, "esbuild", "terser" or "babel")
+- `language` - a string specifying the input language ("js", "css" or "html")
+- `files` - an array of strings with file paths to load and process
+- `streams` - an array of readable streams with source code to process
+- `sources` - an array of strings with source code to process
+- `gzip` - a boolean to disable estimating the gzipped output size, or an object with [options for gzip].
+- `brotli` - a boolean to disable estimating the brotlied output size, or an object with [parameters for brotli].
+- `minifier` - a string choosing the JavaScript minifier ("oxc" - default, "swc", "esbuild", "terser" or "babel")
 
 ### Errors
 
 If parsing of the input or its minification fails, the returned object will contain an `error` key instead of the computed sizes:
 
 ```javascript
-const minifiedSize = require('minified-size')
-const files = [ 'test/invalid.js' ]
-const results = await minifiedSize({ files })
+import { getMinifiedSizes } from 'minified-size'
+const files = ['test/invalid.js']
+const results = await getMinifiedSizes({ files })
 // [ { file: 'test/invalid.js',
 //     error: {
 //       reason: 'unknown: Unexpected token, expected ";"',
@@ -173,31 +164,32 @@ const results = await minifiedSize({ files })
 Let us say, that you minify scripts using UTF-8 literals a lot:
 
 ```js
-message = "䅬朤堾..."
+message = '䅬朤堾...'
 ```
 
 If you run such input through [babel-minify], you may become a lot bigger output instead of a smaller one, because it escapes non-latin characters:
 
 ```js
-message="\u416C\u6724\u583E\u605B\u0825\u6120\u4C20..."
+message = '\u416C\u6724\u583E\u605B\u0825\u6120\u4C20...'
 ```
 
 Look for an option, that will make your minifier retain the Unicode literals unchanged, or converts all escaped Unicode code points to literals. You could also post-process the minified output yourself by the following method:
 
 ```js
-function replaceEscapedUnicodeCharacters (source) {
+function replaceEscapedUnicodeCharacters(source) {
   return source.replace(/\\u([\w]{4})/gi, (match, code) =>
-    String.fromCharCode(Number.parseInt(code, 16)))
+    String.fromCharCode(Number.parseInt(code, 16))
+  )
 }
 ```
 
 The size computation done by `minified-size` uses the function above to ensure correct results until the issue [babel-minify/619] is resolved.
 
-Other minifiers ([swc], [esbuild] and [terser]) do not suffer from this issue. ([esbuild] needs the option `charset=utf8` added.)
+Other minifiers ([oxc], [swc], [esbuild] and [terser]) do not suffer from this issue. ([esbuild] needs the option `charset=utf8` added.)
 
 ## Performance
 
-The JavaScript minifier affects the performance the most. The most efficient one is [swc], but because it cannot minify both modules and scripts using the same options, [esbuild] is used by default. Other minifiers ([esbuild], [swc], [terser] and [babel-minify]) can be chosen as a workaround by the `minifier` option, if the default minifier cannot process some source, or just to compare the results of the minifiers.
+The JavaScript minifier affects the performance the most. The most efficient one is [oxc], which is used by default. Mind that [oxc] doesn't validate the JavaScript or TypeScript input and may minify invalid input too. Other minifiers ([esbuild], [swc], [terser] and [babel-minify]) can be chosen by the `minifier` option, if the default minifier cannot process some source, or just to compare the results of the minifiers.
 
 An example of measuring a cocktail of 6.6 MB in 69 JavaScript libraries (Require, Underscore, jQuery, Backbone, Backbone.Radio, Handlebars, Marionette, Moment, Moment-Timezone, Ally, Hammer, Less etc.) shows the huge difference between the minifiers:
 
@@ -225,7 +217,7 @@ total: 2966286
 
 ## Contributing
 
-In lieu of a formal styleguide, take care to maintain the existing coding style.  Add unit tests for any new or changed functionality. Lint and test your code using Grunt.
+In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using Grunt.
 
 ## License
 
@@ -237,6 +229,7 @@ Licensed under the MIT license.
 [options for gzip]: https://nodejs.org/docs/latest-v10.x/api/zlib.html#zlib_class_options
 [parameters for brotli]: https://nodejs.org/docs/latest-v10.x/api/zlib.html#zlib_compressor_options
 [babel-minify/619]: https://github.com/babel/minify/issues/619
+[oxc]: https://oxc.rs/docs/guide/usage/minifier.html
 [swc]: https://swc.rs/docs/configuration/minification
 [esbuild]: https://github.com/evanw/esbuild#readme
 [terser]: https://github.com/terser/terser#readme

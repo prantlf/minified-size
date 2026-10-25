@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
-const { program } = require('commander')
-const { getMinifiedSizes, generateMinifiedSizes, computeTotalSizes } = require('..')
-const prettyBytes = require('pretty-bytes')
-const { magenta, red } = require('colorette')
-const pkg = require('../package.json')
+import { magenta, red } from '@prantlf/picocolors'
+import { program } from 'commander'
+import prettyBytes from 'pretty-bytes'
+import { getMinifiedSizes, generateMinifiedSizes, computeTotalSizes } from '../lib/index.js'
+import pkg from '../package.json' with { type: 'json' }
 
 program
   .version(pkg.version)
@@ -19,7 +19,7 @@ program
   .option('-b, --no-brotlied-size', 'prevents printing the size of the brotlied code')
   .option('-s, --source-type <type>', 'sets JavaScript source type (module or script)')
   .option('-t, --no-total', 'prevents printing the total sizes')
-  .option('-i, --minifier <minifier>', 'chooses the JavaScript minifier', 'esbuild')
+  .option('-i, --minifier <minifier>', 'chooses the JavaScript minifier', 'oxc')
   .argument('<file...>')
   .on('--help', () => {
     console.log()
@@ -28,7 +28,7 @@ program
     console.log('  Stylesheets are recognized by the extension ".css", or they can be forced')
     console.log('  by the language "css" on the command line. Web pages are recognized by the')
     console.log('  extension ".htm[l]", or they can be forced by the language "html".')
-    console.log('  The JavaScript minifier can be "esbuild", "swc", "terser" or "babel".')
+    console.log('  The JavaScript minifier can be "oxc", "swc", "esbuild", "terser" or "babel".')
     console.log()
     console.log('  Examples:')
     console.log()
@@ -50,12 +50,19 @@ if (!files.length) {
 }
 
 const {
-  language, json, total: printTotal, rawSizes, originalSize: printOriginalSize,
-  minifiedSize: printMinifiedSize, gzippedSize: printGzippedSize,
-  brotliedSize: printBrotliedSize, minifier, sourceType
+  language,
+  json,
+  total: printTotal,
+  rawSizes,
+  originalSize: printOriginalSize,
+  minifiedSize: printMinifiedSize,
+  gzippedSize: printGzippedSize,
+  brotliedSize: printBrotliedSize,
+  minifier,
+  sourceType
 } = program.opts()
 
-function printError (file, { message, line, column }) {
+function printError(file, { message, line, column }) {
   let prefix = file
   // Use the error location returned by babel-minify and crass (only line).
   if (line) {
@@ -69,14 +76,14 @@ function printError (file, { message, line, column }) {
   if (line && !column) {
     message = message
       .split('\n')
-      .map((line, index) => index > 1 ? red(line) : line)
+      .map((line, index) => (index > 1 ? red(line) : line))
       .join('\n')
   }
   prefix = magenta(`${prefix}:`)
   console.log(`${prefix} ${message}`)
 }
 
-function printResult ({ error, file, originalSize, minifiedSize, gzippedSize, brotliedSize }) {
+function printResult({ error, file, originalSize, minifiedSize, gzippedSize, brotliedSize }) {
   if (error) {
     printError(file, error)
   } else {
@@ -101,34 +108,32 @@ function printResult ({ error, file, originalSize, minifiedSize, gzippedSize, br
   }
 }
 
-(async () => {
-  const options = {
-    language,
-    files,
-    streams,
-    gzip: printGzippedSize,
-    brotli: printBrotliedSize,
-    minifier,
-    sourceType
+const options = {
+  language,
+  files,
+  streams,
+  gzip: printGzippedSize,
+  brotli: printBrotliedSize,
+  minifier,
+  sourceType
+}
+if (json) {
+  const results = await getMinifiedSizes(options)
+  if (printTotal && results.length > 1) {
+    results.push(computeTotalSizes(results))
   }
-  if (json) {
-    const results = await getMinifiedSizes(options)
-    if (printTotal && results.length > 1) {
-      results.push(computeTotalSizes(results))
-    }
-    console.log(JSON.stringify(results, undefined, 2))
-  } else {
-    const generator = generateMinifiedSizes(options)
-    for (const results = []; ;) {
-      const result = await generator.next()
-      if (result.done) {
-        if (printTotal && results.length > 1) {
-          printResult({ file: 'total', ...computeTotalSizes(results) })
-        }
-        break
+  console.log(JSON.stringify(results, undefined, 2))
+} else {
+  const generator = generateMinifiedSizes(options)
+  for (const results = []; ;) {
+    const result = await generator.next()
+    if (result.done) {
+      if (printTotal && results.length > 1) {
+        printResult({ file: 'total', ...computeTotalSizes(results) })
       }
-      results.push(result.value)
-      printResult(result.value)
+      break
     }
+    results.push(result.value)
+    printResult(result.value)
   }
-})()
+}
