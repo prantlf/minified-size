@@ -1,3 +1,18 @@
+# [5.0.0](https://github.com/prantlf/minified-size/compare/v4.0.0...v5.0.0) (2026-10-25)
+
+## Features
+
+* Add OXC Minifier, upgrade, convert to ESM ([dc2a79b](https://github.com/prantlf/minified-size/commit/dc2a79b3281db849b2589230f3ec93377b0e3e8f))
+
+## BREAKING CHANGES
+
+Node.js 22.18 or newer is needed because of the support
+for the CJS-ESM interoperability. It's probably no problem today.
+The new minifier - OXC - has become the default one. It shjould be no
+problem, by the results using the default minifier may be different.
+Although the CJS export remaind, better to check if the declaration in
+package.json is read properly.
+
 # [4.0.0](https://github.com/prantlf/minified-size/compare/v3.1.0...v4.0.0) (2025-04-26)
 
 ## Features
